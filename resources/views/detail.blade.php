@@ -37,7 +37,7 @@
 
         .leaflet-container {
             min-height: 50vh;
-            width: 60%;
+            width: 50vw;
             max-width: 100%;
             max-height: 100%;
             border-radius: 10px;
@@ -67,7 +67,7 @@
         }
 
         .latlng-container {
-            width: 250px;
+            /* width: 250px; */
             padding: 14px 18px;
             border-radius: 8px;
             background-color: rgb(211, 209, 209);
@@ -77,67 +77,57 @@
 </head>
 
 <body>
-    <div class="container-scroller">
-        {{-- navbar --}}
-        @include('admin/includes/navbar')
-        {{-- end navbar --}}
 
-        <div class="container-fluid page-body-wrapper">
-            {{-- sidebar --}}
-            @include('admin/includes/sidebar')
-            {{-- end sidebar --}}
-            <div class="main-panel">
-                <div class="content-wrapper">
-                    <div class="row">
-                        <div class="col-lg-12 grid-margin stretch-card">
-                            <div class="card" style="min-height: 70vh; max-heigth: 100vh;">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-center mb-4">
-                                        <h6 class="card-title">Detail Lokasi</h6>
+    <div class="d-flex justify-content-center align-items-center"
+        style="height: 100vh; background-color:rgb(236, 243, 243);">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+
+                        <a class="p-2 mb-3" href="/"
+                            style="color: white; font-weight: bold; background-color:#B66DFF; border-radius: 8px;"><i
+                                class="mdi mdi-arrow-left align-self-center"></i></a>
+
+                        <div class="card-title mt-3">
+                            <h3 class="">Detail Lokasi</h3>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="card-text">
+                                <h3>{{ $lokasi->name }}</h3>
+                                <section class="d-flex">
+                                    <p id="detail">
+                                        {{ $lokasi->detail }} <span id="hide-detail" onclick="hideDetail()">View
+                                            less</span></p>
+                                    <p id="btn-view-detail" onclick="viewDetail()">View More
+                                    </p>
+                                </section>
+                                <h3>Alamat</h3>
+                                <p>{{ $lokasi->address }}</p>
+                                <div class="d-sm-block d-lg-flex mb-3">
+                                    <div>
+                                        <p class="mb-1" id="latlng-text">Latitude</p>
+                                        <div class="latlng-container me-3">{{ $lokasi->latitude }}</div>
                                     </div>
-                                    <div class="overflow-auto">
-                                        <div class="d-flex justify-content-between">
-                                            <div class="card" style="width: 50%; margin-right: 20px;">
-                                                <h3>{{ $lokasi->name }}</h3>
-                                                <section class="d-flex">
-                                                    <p id="detail">
-                                                        {{ $lokasi->detail }} <span id="hide-detail"
-                                                            onclick="hideDetail()">View less</span></p>
-                                                    <p id="btn-view-detail" onclick="viewDetail()">View More
-                                                    </p>
-                                                </section>
-                                                <h3>Alamat</h3>
-                                                <p>{{ $lokasi->address }}</p>
-                                                <div class="d-sm-block d-lg-flex mb-3">
-                                                    <div>
-                                                        <p class="mb-1" id="latlng-text">Latitude</p>
-                                                        <div class="latlng-container me-3">{{ $lokasi->latitude }}</div>
-                                                    </div>
-                                                    <div>
-                                                        <p class="mb-1" id="latlng-text">Longitude</p>
-                                                        <div class="latlng-container">{{ $lokasi->longitude }}</div>
-                                                    </div>
-                                                </div>
-                                                <h3>Status</h3>
-                                                <p>{{ $lokasi->is_active == 1 ? 'Aktif' : 'Tidak Aktif' }}</p>
-                                                <button class="btn btn-primary" type="button"
-                                                    onclick="routeToLocation()">Rute</button>
-                                            </div>
-                                            <div class="leaflet-container">
-                                                <div id="map"></div>
-                                            </div>
-                                        </div>
+                                    <div>
+                                        <p class="mb-1" id="latlng-text">Longitude</p>
+                                        <div class="latlng-container">{{ $lokasi->longitude }}</div>
                                     </div>
                                 </div>
+                                <h3>Status</h3>
+                                <p>{{ $lokasi->is_active == 1 ? 'Aktif' : 'Tidak Aktif' }}</p>
+                                <button class="btn btn-primary" type="button" onclick="routeToLocation()">Rute</button>
+                            </div>
+                            <div class="leaflet-container ms-5">
+                                <div id="map"></div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
-
 </body>
 <script src="{{ url('admin_template/assets/vendors/js/vendor.bundle.base.js') }}"></script>
 <script src="{{ url('admin_template/assets/vendors/chart.js/Chart.min.js') }}"></script>

@@ -85,4 +85,10 @@ class LokasiController extends Controller
         Lokasi::where('id', $id)->delete();
         return back();
     }
+
+    public function detail_lokasi($id)
+    {
+        $lokasi = Lokasi::where('id', $id)->first();
+        return view('detail', compact('lokasi'));
+    }
 }

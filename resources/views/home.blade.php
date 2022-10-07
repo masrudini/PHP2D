@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ url('admin_template/assets/vendors/mdi/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ url('admin_template/assets/vendors/css/vendor.bundle.base.css') }}">
     <link rel="stylesheet" href="{{ url('admin_template/assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ url('admin_template/assets/css/custom.css') }}">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="{{ url('images/sungai_kakap.ico') }}" />
     <!-- Leaflet -->
@@ -17,7 +18,8 @@
         integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
         crossorigin="" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
-
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <!-- Make sure you put this AFTER Leaflet's CSS -->
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
         integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
@@ -27,7 +29,7 @@
     <style>
         html,
         body {
-            height: 100%;
+            /* height: 100%; */
             margin: 0;
         }
 
@@ -59,7 +61,7 @@
         }
 
         #map {
-            height: 95%;
+            height: 100vh;
             width: 100vw;
         }
     </style>
@@ -67,16 +69,35 @@
 </head>
 
 <body>
+    <div class="container position-fixed fixed-top">
+        <nav
+            class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between px-5 align-items-center">
+
+            <a href="{{ url('/') }}" class="navbar-brand"><img width="50px"
+                    src="{{ url('images/sungai_kakap.png') }}" class="me-3" alt="">Sungai Kakap</a>
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Search by
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="/login" class="nav-link">Login</a>
+                </li>
+            </ul>
+        </nav>
+
+    </div>
     <div class="container-scroller">
-        <div class="container-fluid page-body-wrapper">
-            <div class="card">
-                <nav>
-                    <a href="/login">Login</a>
-                </nav>
-                <div class="leaflet-container">
-                    <div id="map"></div>
-                </div>
-            </div>
+        <div class="leaflet-container">
+            <div id="map"></div>
         </div>
     </div>
 </body>
@@ -89,16 +110,29 @@
 <script>
     var currentLat = "";
     var currentLng = "";
-
     var map = L.map('map', {
         zoomControl: true
     }).setView([-0.05652732759345948, 109.17823055147235], 13);
+    var routingControl = L.Routing.control({}).addTo(map);
 
     var tiles = L.tileLayer(
         'http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
             maxZoom: 30,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
         }).addTo(map);
+
+    function showPosition(pos) {
+        currentLat = pos.coords.latitude;
+        currentLng = pos.coords.longitude;
+        // console.log(userLat, userLng);
+    }
+
+    if (!navigator.geolocation) {
+        console.log("Location denied");
+    } else {
+        console.log("Halo");
+        navigator.geolocation.getCurrentPosition(showPosition);
+    }
 
     $(document).ready(function() {
         $.getJSON('lokasi/json', function(data) {
@@ -113,21 +147,46 @@
                 });
 
                 marker.on('click', function(ev) {
-                    const popupContent = '<h3>' + data[index].name + '</h3>' + '<p>' +
-                        data[index].address + '</p>' +
-                        '<img height="200px" width="100%"  src="images/numpanh/' + data[
-                            index].image + '">' +
-                        '<button class="btn btn-success mt-3" onclick="keSini(' + data[
+                    const popupContent =
+                        '<h3>' + data[index].name + '</h3>' + '<p class="text-wrap">' +
+                        data[index].address +
+                        '</p>' +
+                        '<img height="auto" width="100%"  src="storage/' + data[
+                            index].image + '">' + '</div>' +
+                        '<div class="d-flex justify-content-between">' +
+                        '<button class="btn btn-info mt-3" onclick="routing(' + data[
                             index].latitude + ',' + data[index].longitude +
                         ')">Rute</button>' +
                         '<a href="/detail/' + data[index].id +
-                        '" class="btn btn-success mt-3 mx-2 text-decoration-none text-light">Detail</a>';
+                        '" class="btn btn-info mt-3 text-decoration-none text-light">Detail</a>';
                     ev.target.bindPopup(popupContent).openPopup();
                 });
             });
         });
     });
 
+    function routing(lat, lng) {
+        if (routingControl.getPlan() != null) {
+            routingControl.getPlan().setWaypoints([
+                L.latLng(currentLat, currentLng),
+                L.latLng(lat, lng)
+            ]);
+        } else {
+
+            routingControl.setWaypoints({
+                waypoints: [
+                    L.latLng(currentLat, currentLng),
+                    L.latLng(lat, lng)
+                ],
+                // useZoomParameter: true,
+                // routeWhileDragging: true,
+            }).addTo(map);
+        }
+
+
+        // L.Routing.itinerary.hide();
+        map.flyTo([currentLat, currentLng]);
+    }
     // getLocation();
 
     // function getLocation() {
@@ -146,5 +205,17 @@
     //     map.flyTo([currentLat, currentLng], 20);
     // }
 </script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
 </html>

@@ -44,3 +44,5 @@ Route::post('/tambah-lokasi', [LokasiController::class, 'tambah_lokasi']);
 Route::post('/edit-lokasi', [LokasiController::class, 'edit_lokasi']);
 
 Route::get('/delete/{id}', [LokasiController::class, 'delete']);
+
+Route::get('/detail/{id}', [LokasiController::class, 'detail_lokasi']);

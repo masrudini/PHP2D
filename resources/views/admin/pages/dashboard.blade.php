@@ -32,7 +32,7 @@
             max-width: 100%;
             max-height: 100%;
             border-radius: 10px;
-            padding: 10px;
+            padding: 30 px;
             background-color: white;
         }
 
@@ -91,16 +91,24 @@
     var currentLat = "";
     var currentLng = "";
 
+    // function showPosition(pos) {
+    //     currentLat = pos.coords.latitude;
+    //     currentLng = pos.coords.longitude;
+    //     console.log(currentLat, currentLng);
+    // }
+
     var map = L.map('map', {
         zoomControl: true
     }).setView([-0.05652732759345948, 109.17823055147235], 13);
+
+    // map.flyTo([currentLat, currentLng], 8
 
     var tiles = L.tileLayer(
         'http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
             maxZoom: 30,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
         }).addTo(map);
-
+    // map.flyTo([currentLat, currentLng]);
     $(document).ready(function() {
         $.getJSON('lokasi/json', function(data) {
             $.each(data, function(index) {
