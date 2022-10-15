@@ -126,6 +126,7 @@
         <div class="leaflet-container">
             <div id="map"></div>
         </div>
+
     </div>
 </body>
 
@@ -160,7 +161,7 @@
     }
 
     $(document).ready(function() {
-        $.getJSON('lokasi/json', function(data) {
+        $.getJSON('lokasi-aktif/json', function(data) {
             $.each(data, function(index) {
 
                 var Icon = L.icon({
@@ -210,7 +211,7 @@
             routingControl.getPlan().setWaypoints([
                 L.latLng(currentLat, currentLng),
                 L.latLng(lat, lng)
-            ]).addTo(map);
+            ]).addTo(map);;
         } else {
             routingControl.setWaypoints({
                 waypoints: [
@@ -222,6 +223,7 @@
         map.panTo([currentLat, currentLng]);
         map.flyTo([currentLat, currentLng], 15).closePopup();
     }
+
     L.control.mousePosition().addTo(map);
 </script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

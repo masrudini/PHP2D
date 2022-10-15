@@ -10,7 +10,6 @@
         <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
             <span class="mdi mdi-menu"></span>
         </button>
-
         <ul class="navbar-nav navbar-nav-right">
             <li class="nav-item nav-profile dropdown">
                 <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown"
@@ -22,7 +21,8 @@
                 <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
                     <form action="/logout" method="POST">
                         @csrf
-                        <button class="dropdown-item"><i class="mdi mdi-logout me-2 text-primary"></i>Signout</button>
+                        <button class="dropdown-item" style="color: black"><i
+                                class="mdi mdi-logout me-2 text-primary"></i>Signout</button>
                     </form>
                 </div>
             </li>

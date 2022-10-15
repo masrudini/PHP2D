@@ -209,11 +209,9 @@
                 L.latLng(userLat, userLng),
                 L.latLng(currentLat, currentLng)
             ],
-            // useZoomParameter: true,
-            // routeWhileDragging: true,
         }).addTo(map);
-        // L.Routing.itinerary.hide();
-        map.flyTo([userLat, userLng]);
+        map.panTo([userLat, userLng]);
+        map.flyTo([userLat, userLng], 15);
     }
 
     var tiles = L.tileLayer(

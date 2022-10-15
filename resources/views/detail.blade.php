@@ -189,7 +189,6 @@
     if (!navigator.geolocation) {
         console.log("Location denied");
     } else {
-        console.log("Halo");
         navigator.geolocation.getCurrentPosition(showPosition);
     }
 
@@ -224,7 +223,7 @@
         map.removeLayer(marker);
         marker = L.marker([latitude, longitude]).addTo(map);
         map.panTo([latitude, longitude]);
-        map.flyTo([latitude, longitude], 17);
+        map.flyTo([latitude, longitude], 15);
     }
     map.on('click', function(e) {
         onMapClick(e);

@@ -40,6 +40,25 @@
             height: 100%;
             width: 100vw;
         }
+
+        .leaflet-popup {
+            margin-bottom: 25px;
+        }
+
+        .leaflet-control-mouseposition {
+            background-color: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 0 5px #bbb;
+            padding: 1px 5px;
+            margin: 0;
+            color: #333;
+            font: 11px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+        }
+
+        .leaflet-popup-content-wrapper {
+            text-align: center;
+            width: 300px;
+            height: 30%;
+        }
     </style>
 </head>
 
@@ -90,19 +109,15 @@
 <script>
     var currentLat = "";
     var currentLng = "";
-
     // function showPosition(pos) {
     //     currentLat = pos.coords.latitude;
     //     currentLng = pos.coords.longitude;
     //     console.log(currentLat, currentLng);
     // }
-
     var map = L.map('map', {
         zoomControl: true
     }).setView([-0.05652732759345948, 109.17823055147235], 13);
-
     // map.flyTo([currentLat, currentLng], 8
-
     var tiles = L.tileLayer(
         'http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
             maxZoom: 30,
@@ -112,24 +127,20 @@
     $(document).ready(function() {
         $.getJSON('lokasi/json', function(data) {
             $.each(data, function(index) {
-
                 marker = L.marker([data[index].latitude, data[index].longitude]).addTo(map)
                     .bindPopup();
-
                 marker.on('mouseover', function(ev) {
                     const popupLocation = '<p>' + data[index].name;
                     ev.target.bindPopup(popupLocation).openPopup();
                 });
-
                 marker.on('click', function(ev) {
                     const popupContent =
-                        '<h3>' + data[index].name + '</h3>' + '<p class="text-wrap">' +
-                        data[index].address +
-                        '</p>' +
-                        '<img height="auto" width="100%"  src="storage/' + data[
+                        '<h4>' + data[index].name + '</h4>' +
+                        '<img height="150px" width="100%"  src="storage/' + data[
                             index].image + '">' + '</div>' +
                         '<div class="d-flex justify-content-between">' +
-                        '<button class="btn btn-info mt-3" onclick="keSini(' + data[
+                        '<button class="btn btn-info mt-3 me-1" onclick="routing(' +
+                        data[
                             index].latitude + ',' + data[index].longitude +
                         ')">Rute</button>' +
                         '<a href="/detail/' + data[index].id +

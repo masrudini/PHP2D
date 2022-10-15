@@ -10,12 +10,35 @@ class LokasiController extends Controller
 {
     public function index()
     {
-        return view('home');
+        $lokasis = Lokasi::All();
+        return view('home', compact('lokasis'));
+    }
+
+    public function aktif()
+    {
+        $lokasis = Lokasi::All();
+        return view('aktif', compact('lokasis'));
+    }
+
+    public function non_aktif()
+    {
+        $lokasis = Lokasi::All();
+        return view('non_aktif', compact('lokasis'));
     }
 
     public function lokasi()
     {
         $lokasi = Lokasi::all();
+        return json_encode($lokasi);
+    }
+    public function lokasi_aktif()
+    {
+        $lokasi = Lokasi::where('is_active', 1)->get();
+        return json_encode($lokasi);
+    }
+    public function lokasi_non()
+    {
+        $lokasi = Lokasi::where('is_active', 0)->get();
         return json_encode($lokasi);
     }
 

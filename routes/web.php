@@ -37,7 +37,15 @@ Route::get('/detail-lokasi/{id}', [AdminController::class, 'detail_lokasi']);
 //Lokasi controller
 Route::get('/', [LokasiController::class, 'index']);
 
+Route::get('/aktif', [LokasiController::class, 'aktif']);
+
+Route::get('/non-aktif', [LokasiController::class, 'non_aktif']);
+
 Route::get('lokasi/json', [LokasiController::class, 'lokasi']);
+
+Route::get('lokasi-aktif/json', [LokasiController::class, 'lokasi_aktif']);
+
+Route::get('lokasi-non/json', [LokasiController::class, 'lokasi_non']);
 
 Route::post('/tambah-lokasi', [LokasiController::class, 'tambah_lokasi']);
 
