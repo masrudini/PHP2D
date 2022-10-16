@@ -11,19 +11,33 @@ class LokasiController extends Controller
     public function index()
     {
         $lokasis = Lokasi::All();
-        return view('home', compact('lokasis'));
+        $lokasi_name = [];
+        foreach ($lokasis as $lokasi) {
+            array_push($lokasi_name, $lokasi['name']);
+        }
+
+        // dd($lokasis);
+        return view('home', compact('lokasis', 'lokasi_name'));
     }
 
     public function aktif()
     {
-        $lokasis = Lokasi::All();
-        return view('aktif', compact('lokasis'));
+        $lokasis = Lokasi::where('is_active', 1)->get();
+        $lokasi_name = [];
+        foreach ($lokasis as $lokasi) {
+            array_push($lokasi_name, $lokasi['name']);
+        }
+        return view('aktif', compact('lokasis', 'lokasi_name'));
     }
 
     public function non_aktif()
     {
-        $lokasis = Lokasi::All();
-        return view('non_aktif', compact('lokasis'));
+        $lokasis = Lokasi::where('is_active', 0)->get();
+        $lokasi_name = [];
+        foreach ($lokasis as $lokasi) {
+            array_push($lokasi_name, $lokasi['name']);
+        }
+        return view('non_aktif', compact('lokasis', 'lokasi_name'));
     }
 
     public function lokasi()
@@ -48,12 +62,14 @@ class LokasiController extends Controller
             [
                 'name' => 'required',
                 'address' => 'required',
+                'category' => 'required',
                 'detail' => 'required',
                 'image' => 'required|image',
             ],
             [
                 'name.required' => 'Nama harus diisi',
                 'address.required' => 'Alamat harus diisi',
+                'category.required' => 'Kategori harus diisi',
                 'detail.required' => 'Detail harus diisi',
                 'image.required' => 'Gambar harus diisi',
                 'image.image' => 'File yang diinput harus gambar',
@@ -63,6 +79,7 @@ class LokasiController extends Controller
         $data = ([
             'name' => $request->name,
             'address' => $request->address,
+            'category_id' => $request->category,
             'detail' => $request->detail,
             'image' => $request->image->store('lokasi-images'),
             'latitude' => $request->latitude,
@@ -82,6 +99,7 @@ class LokasiController extends Controller
                 'name' => $request->name,
                 'address' => $request->address,
                 'detail' => $request->detail,
+                'category_id' => $request->category,
                 'image' => $request->image->store('lokasi-images'),
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
@@ -92,6 +110,7 @@ class LokasiController extends Controller
                 'name' => $request->name,
                 'address' => $request->address,
                 'detail' => $request->detail,
+                'category_id' => $request->category,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
                 'is_active' => $request->is_active

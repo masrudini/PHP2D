@@ -124,10 +124,48 @@
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
         }).addTo(map);
     // map.flyTo([currentLat, currentLng]);
+    var other_icon = L.icon({
+        iconUrl: 'images/lainnya.png',
+        iconSize: [20, 26],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var masjid_icon = L.icon({
+        iconUrl: 'images/mosque.png',
+        iconSize: [20, 26],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var church_icon = L.icon({
+        iconUrl: 'images/church.png',
+        iconSize: [20, 26],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+    var school = L.icon({
+        iconUrl: 'images/school.png',
+        iconSize: [20, 26],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
     $(document).ready(function() {
         $.getJSON('lokasi/json', function(data) {
             $.each(data, function(index) {
-                marker = L.marker([data[index].latitude, data[index].longitude]).addTo(map)
+                marker = L.marker([data[index].latitude, data[index].longitude], {
+                        icon: data[index].category_id == 1 ? church_icon : data[index]
+                            .category_id == 2 ?
+                            masjid_icon : data[index].category_id == 4 ? school : other_icon
+                    }).addTo(map)
                     .bindPopup();
                 marker.on('mouseover', function(ev) {
                     const popupLocation = '<p>' + data[index].name;

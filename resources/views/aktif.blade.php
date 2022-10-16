@@ -33,6 +33,11 @@
             margin: 0;
         }
 
+        .legend {
+            background: rgb(252, 248, 248);
+            padding: 1.5em 3em;
+        }
+
         .leaflet-container {
             margin: 0 auto;
             height: 100vh;
@@ -83,43 +88,87 @@
             width: 300px;
             height: 30%;
         }
+
+        /* AUTOCOMPLETE */
+        .autocomplete {
+            /*the container must be positioned relative:*/
+            position: relative;
+            display: inline-block;
+        }
+
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            border-bottom: none;
+            border-top: none;
+            z-index: 99;
+            /*position the autocomplete items to be the same width as the container:*/
+            top: 100%;
+            left: 0;
+            right: 0;
+        }
+
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #fff;
+            border-bottom: 1px solid #d4d4d4;
+        }
+
+        .autocomplete-items div:hover {
+            /*when hovering an item:*/
+            background-color: #e9e9e9;
+        }
+
+        .autocomplete-active {
+            /*when navigating through the items using the arrow keys:*/
+            background-color: DodgerBlue !important;
+            color: #ffffff;
+        }
     </style>
 
 </head>
 
 <body>
     <div class="container position-fixed fixed-top">
-        <nav
-            class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between px-5 align-items-center">
-            <a href="{{ url('/') }}" class="navbar-brand"><img width="50px"
-                    src="{{ url('images/sungai_kakap.png') }}" class="me-3" alt="">Fasilitas Umum Sungai
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between px-5 align-items-center">
+            <a href="{{ url('/') }}" class="navbar-brand" style="width: fit-content;"><img width="50px"
+                    id="navbar-icon" src="{{ url('images/sungai_kakap.png') }}" class="me-3" alt="">Fasilitas
+                Umum Sungai
                 Kakap</a>
-            <div class="ms-2" style="width: 400px">
-                <select class="form-select" onchange="cari(this.value)">
-                    <option selected>---Pilih---</option>
-                    @foreach ($lokasis as $lokasi)
-                        <option value="{{ $lokasi->latitude }},{{ $lokasi->longitude }}">{{ $lokasi->name }}
-                        </option>
-                    @endforeach
-                </select>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent" style="width: fit-content;">
+                <div class="d-flex flex-sm-column flex-lg-row ms-0 ms-sm-auto align-items-end float-start float-sm-end">
+                    <form class="ms-auto mr-auto" autocomplete="off">
+                        <div class="autocomplete" style="width:300px;">
+                            <input class="form-control" id="lokasi_name" type="text" name="lokasi_name"
+                                placeholder="Nama Lokasi">
+                        </div>
+                    </form>
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Search by
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/aktif" style="color: black;">Fasilitas Aktif</a>
+                                <a class="dropdown-item" href="/non-aktif" style="color: black;">Fasilitas Non-Aktif</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/" style="color: black;">Semua Fasilitas</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/login" class="nav-link">Login</a>
+                        </li>
+                    </ul>
+                </div>
+
             </div>
-            <ul class="navbar-nav">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Search by
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/aktif" style="color: black;">Fasilitas Aktif</a>
-                        <a class="dropdown-item" href="/non-aktif" style="color: black;">Fasilitas Non-Aktif</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="/" style="color: black;">Semua Fasilitas</a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a href="/login" class="nav-link">Login</a>
-                </li>
-            </ul>
         </nav>
     </div>
     <div class="container-scroller">
@@ -134,13 +183,132 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
 <script src="{{ url('js/L.Control.MousePosition.js') }}"></script>
+<script>
+    var map = L.map('map', {
+        zoomControl: true
+    }).setView([-0.05652732759345948, 109.17823055147235], 13);
+    var lokasis = <?php echo json_encode($lokasis); ?>;
+
+    function test(name) {
+        lokasis.forEach(lokasi => {
+            if (lokasi['name'].toLowerCase() == name.toLowerCase()) {
+                // console.log(typeof lokasi['latitude']);
+                map.flyTo([lokasi['latitude'], lokasi['longitude']], 16);
+            }
+        });
+    }
+
+    function autocomplete(inp, arr) {
+        /*the autocomplete function takes two arguments,
+        the text field element and an array of possible autocompleted values:*/
+        var currentFocus;
+        /*execute a function when someone writes in the text field:*/
+        inp.addEventListener("input", function(e) {
+            var a, b, i, val = this.value;
+            /*close any already open lists of autocompleted values*/
+            closeAllLists();
+            if (!val) {
+                return false;
+            }
+            currentFocus = -1;
+            /*create a DIV element that will contain the items (values):*/
+            a = document.createElement("DIV");
+            a.setAttribute("id", this.id + "autocomplete-list");
+            a.setAttribute("class", "autocomplete-items");
+            /*append the DIV element as a child of the autocomplete container:*/
+            this.parentNode.appendChild(a);
+            /*for each item in the array...*/
+            for (i = 0; i < arr.length; i++) {
+                /*check if the item starts with the same letters as the text field value:*/
+                if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                    /*create a DIV element for each matching element:*/
+                    b = document.createElement("DIV");
+                    /*make the matching letters bold:*/
+                    b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                    b.innerHTML += arr[i].substr(val.length);
+                    /*insert a input field that will hold the current array item's value:*/
+                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                    /*execute a function when someone clicks on the item value (DIV element):*/
+                    b.addEventListener("click", function(e) {
+                        /*insert the value for the autocomplete text field:*/
+                        inp.value = this.getElementsByTagName("input")[0].value;
+                        test(inp.value);
+                        /*close the list of autocompleted values,
+                        (or any other open lists of autocompleted values:*/
+                        closeAllLists();
+                    });
+                    a.appendChild(b);
+                }
+            }
+        });
+        /*execute a function presses a key on the keyboard:*/
+        inp.addEventListener("keydown", function(e) {
+            var x = document.getElementById(this.id + "autocomplete-list");
+            if (x) x = x.getElementsByTagName("div");
+            if (e.keyCode == 40) {
+                /*If the arrow DOWN key is pressed,
+                increase the currentFocus variable:*/
+                currentFocus++;
+                /*and and make the current item more visible:*/
+                addActive(x);
+            } else if (e.keyCode == 38) { //up
+                /*If the arrow UP key is pressed,
+                decrease the currentFocus variable:*/
+                currentFocus--;
+                /*and and make the current item more visible:*/
+                addActive(x);
+            } else if (e.keyCode == 13) {
+                /*If the ENTER key is pressed, prevent the form from being submitted,*/
+                e.preventDefault();
+                if (currentFocus > -1) {
+                    /*and simulate a click on the "active" item:*/
+                    if (x) x[currentFocus].click();
+                }
+            }
+        });
+
+        function addActive(x) {
+            /*a function to classify an item as "active":*/
+            if (!x) return false;
+            /*start by removing the "active" class on all items:*/
+            removeActive(x);
+            if (currentFocus >= x.length) currentFocus = 0;
+            if (currentFocus < 0) currentFocus = (x.length - 1);
+            /*add class "autocomplete-active":*/
+            x[currentFocus].classList.add("autocomplete-active");
+        }
+
+        function removeActive(x) {
+            /*a function to remove the "active" class from all autocomplete items:*/
+            for (var i = 0; i < x.length; i++) {
+                x[i].classList.remove("autocomplete-active");
+            }
+        }
+
+        function closeAllLists(elmnt) {
+            /*close all autocomplete lists in the document,
+            except the one passed as an argument:*/
+            var x = document.getElementsByClassName("autocomplete-items");
+            for (var i = 0; i < x.length; i++) {
+                if (elmnt != x[i] && elmnt != inp) {
+                    x[i].parentNode.removeChild(x[i]);
+                }
+            }
+        }
+        /*execute a function when someone clicks in the document:*/
+        document.addEventListener("click", function(e) {
+            closeAllLists(e.target);
+        });
+    }
+</script>
+<script>
+    var lokasi_name = <?php echo json_encode($lokasi_name); ?>;
+    autocomplete(document.getElementById("lokasi_name"), lokasi_name);
+</script>
 <!-- Script Leaflet -->
 <script>
     var currentLat = "";
     var currentLng = "";
-    var map = L.map('map', {
-        zoomControl: true
-    }).setView([-0.05652732759345948, 109.17823055147235], 13);
     var routingControl = L.Routing.control({}).addTo(map);
 
     var tiles = L.tileLayer(
@@ -160,12 +328,34 @@
         navigator.geolocation.getCurrentPosition(showPosition);
     }
 
+    var legend = L.control({
+        position: "bottomright"
+    });
+    legend.onAdd = function(map) {
+        var div = L.DomUtil.create("div", "legend");
+        div.innerHTML += "<h4>Legenda</h4>";
+        div.innerHTML +=
+            '<img src="images/icon_masjid.png" width="18px" class="icon py-2"></i><span class="px-2">Masjid</span><br>';
+        div.innerHTML +=
+            '<img src="images/icon_gereja.png" width="18px" class="icon py-2"></i><span class="px-2">Gereja</span><br>';
+        div.innerHTML +=
+            '<img src="images/icon_sekolah.png" width="18px" class="icon py-2"></i><span class="px-2">Sekolah</span><br>';
+        div.innerHTML +=
+            '<img src="images/icon_administrasi.png" width="18px" class="icon py-2"></i><span class="px-2">Bangunan Administrasi</span><br>';
+        div.innerHTML +=
+            '<img src="images/icon_pabrik.png" width="18px" class="icon py-2"></i><span class="px-2">Pabrik</span><br>';
+        div.innerHTML +=
+            '<img src="images/icon_lainnya.png" width="18px" class="icon py-2"></i><span class="px-2">Lainnya</span><br>';
+        return div;
+    };
+    legend.addTo(map);
+
     $(document).ready(function() {
         $.getJSON('lokasi-aktif/json', function(data) {
             $.each(data, function(index) {
 
-                var Icon = L.icon({
-                    iconUrl: 'images/lainnya.png',
+                var icon_lainnya = L.icon({
+                    iconUrl: 'images/icon_lainnya.png',
                     iconSize: [20, 26],
                     shadowSize: [50, 64],
                     iconAnchor: [15, 36],
@@ -173,9 +363,56 @@
                     popupAnchor: [-3, -76]
                 });
 
+                var icon_masjid = L.icon({
+                    iconUrl: 'images/icon_masjid.png',
+                    iconSize: [20, 26],
+                    shadowSize: [50, 64],
+                    iconAnchor: [15, 36],
+                    shadowAnchor: [4, 62],
+                    popupAnchor: [-3, -76]
+                });
 
+                var icon_gereja = L.icon({
+                    iconUrl: 'images/icon_gereja.png',
+                    iconSize: [20, 26],
+                    shadowSize: [50, 64],
+                    iconAnchor: [15, 36],
+                    shadowAnchor: [4, 62],
+                    popupAnchor: [-3, -76]
+                });
+                var icon_sekolah = L.icon({
+                    iconUrl: 'images/icon_sekolah.png',
+                    iconSize: [20, 26],
+                    shadowSize: [50, 64],
+                    iconAnchor: [15, 36],
+                    shadowAnchor: [4, 62],
+                    popupAnchor: [-3, -76]
+                });
+                var icon_pabrik = L.icon({
+                    iconUrl: 'images/icon_pabrik.png',
+                    iconSize: [20, 26],
+                    shadowSize: [50, 64],
+                    iconAnchor: [15, 36],
+                    shadowAnchor: [4, 62],
+                    popupAnchor: [-3, -76]
+                });
+
+                var icon_administrasi = L.icon({
+                    iconUrl: 'images/icon_administrasi.png',
+                    iconSize: [20, 26],
+                    shadowSize: [50, 64],
+                    iconAnchor: [15, 36],
+                    shadowAnchor: [4, 62],
+                    popupAnchor: [-3, -76]
+                });
+
+                // console.log(data[index].category_id)
                 marker = L.marker([data[index].latitude, data[index].longitude], {
-                    icon: Icon
+                    icon: data[index].category_id == 1 ? icon_gereja : data[index]
+                        .category_id == 2 ?
+                        icon_masjid : data[index].category_id == 3 ? icon_administrasi :
+                        data[index].category_id == 4 ? icon_sekolah : data[index] == 7 ?
+                        icon_pabrik : icon_lainnya
                 }).addTo(map).bindPopup();
 
                 marker.on('mouseover', function(ev) {

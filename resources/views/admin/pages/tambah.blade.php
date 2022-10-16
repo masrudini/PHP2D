@@ -97,6 +97,16 @@
                                                         </div>
                                                     @enderror
                                                 </div>
+                                                <div class="form-floating mb-2">
+                                                    <select class="form-select" id="category" name="category">
+                                                        <option selected>-</option>
+                                                        @foreach ($categories as $category)
+                                                            <option value="{{ $category->id }}">{{ $category->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    <label for="category">Kategori Gedung</label>
+                                                </div>
                                                 <div>
                                                     <input
                                                         class="form-control mb-2 @error('image') is-invalid @enderror"

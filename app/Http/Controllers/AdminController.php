@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lokasi;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use DataTables;
@@ -19,7 +20,9 @@ class AdminController extends Controller
 
     public function tambah()
     {
-        return view('admin/pages/tambah');
+        $categories = Category::all();
+        // dd($categories);
+        return view('admin/pages/tambah', compact('categories'));
     }
 
     public function detail()
@@ -30,8 +33,10 @@ class AdminController extends Controller
 
     public function edit($id)
     {
+        $categories = Category::all();
         $lokasis = Lokasi::where('id', $id)->get();
-        return view('admin/pages/edit', compact('lokasis'));
+        // dd($lokasis);
+        return view('admin/pages/edit', compact('lokasis', 'categories'));
     }
 
     public function detail_lokasi($id)
