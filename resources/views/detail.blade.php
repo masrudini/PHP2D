@@ -104,6 +104,8 @@
                                 </section>
                                 <h3>Alamat</h3>
                                 <p>{{ $lokasi->address }}</p>
+                                <h3>Kategori</h3>
+                                <p>{{ $lokasi->category->name }}</p>
                                 <div class="d-sm-block d-lg-flex mb-3">
                                     <div>
                                         <p class="mb-1" id="latlng-text">Latitude</p>
@@ -178,12 +180,10 @@
     var map = L.map('map', {
         zoomControl: true
     }).setView([-0.05652732759345948, 109.17823055147235], 13);
-    // Routing & current location
 
     function showPosition(pos) {
         userLat = pos.coords.latitude;
         userLng = pos.coords.longitude;
-        console.log(userLat, userLng);
     }
 
     if (!navigator.geolocation) {
@@ -198,10 +198,7 @@
                 L.latLng(userLat, userLng),
                 L.latLng(currentLat, currentLng)
             ],
-            // useZoomParameter: true,
-            // routeWhileDragging: true,
         }).addTo(map);
-        // L.Routing.itinerary.hide();
         map.flyTo([userLat, userLng]);
     }
 
@@ -214,20 +211,6 @@
     marker = L.marker([currentLat, currentLng]).addTo(map);
     map.panTo([currentLat, currentLng]);
     map.flyTo([currentLat, currentLng], 18);
-
-    function onMapClick(e) {
-        var latitude = e.latlng['lat'];
-        var longitude = e.latlng['lng'];
-        document.getElementById('latitude').setAttribute('value', e.latlng['lat']);
-        document.getElementById('longitude').setAttribute('value', e.latlng['lng']);
-        map.removeLayer(marker);
-        marker = L.marker([latitude, longitude]).addTo(map);
-        map.panTo([latitude, longitude]);
-        map.flyTo([latitude, longitude], 15);
-    }
-    map.on('click', function(e) {
-        onMapClick(e);
-    });
 </script>
 
 </html>

@@ -26,7 +26,7 @@
 
     <style>
         .leaflet-container {
-            height: auto;
+            height: 520px;
             width: 50%;
             max-width: 100%;
             max-height: 100%;
@@ -57,23 +57,56 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-center mb-4">
-                                        <h6 class="card-title">Form Tambah Lokasi</h6>
+                                        <h6 class="card-title">Form Isian Toponimi Bangunan</h6>
                                     </div>
                                     <div class="overflow-auto">
                                         <div class="d-flex justify-content-between">
                                             <form action="/tambah-lokasi" method="POST" style="width: 50%"
                                                 class="me-4" enctype="multipart/form-data">
                                                 @csrf
+                                                <div class="form-floating mb-2">
+                                                    <select class="form-select" id="category" name="category">
+                                                        <option selected>-</option>
+                                                        @foreach ($categories as $category)
+                                                            <option value="{{ $category->id }}">{{ $category->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    <label for="category">Jenis Toponimi</label>
+                                                </div>
                                                 <div class="form-floating">
                                                     <input type="text"
                                                         class="form-control mb-2 @error('name') is-invalid @enderror"
                                                         id="name" name="name" value="{{ old('name') }}">
-                                                    <label for="name">Nama Gedung</label>
+                                                    <label for="name">Nama Fasilitas Umum</label>
                                                     @error('name')
                                                         <div class="invalid-feedback mb-1">
                                                             {{ $message }}
                                                         </div>
                                                     @enderror
+                                                </div>
+                                                <div class="form-floating">
+                                                    <input type="text"
+                                                        class="form-control mb-2 @error('nama_lain') is-invalid @enderror"
+                                                        id="nama_lain" name="nama_lain">
+                                                    <label for="nama_lain">Nama Lain/Sebutan Lokal</label>
+                                                    @error('nama_lain')
+                                                        <div class="invalid-feedback mb-1">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
+                                                </div>
+                                                <div class="d-flex justify-content-between ">
+                                                    <div class="form-floating" style="width: 49%">
+                                                        <input type="text" class="form-control mb-2" id="latitude"
+                                                            name="latitude" value="">
+                                                        <label for="latitude">Latitude</label>
+                                                    </div>
+                                                    <div class="form-floating" style="width: 49%">
+                                                        <input type="text" class="form-control mb-2" id="longitude"
+                                                            name="longitude" value="">
+                                                        <label for="longitude">Longitude</label>
+                                                    </div>
                                                 </div>
                                                 <div class="form-floating">
                                                     <input type="text"
@@ -88,54 +121,113 @@
                                                 </div>
                                                 <div class="form-floating">
                                                     <input type="text"
-                                                        class="form-control mb-2 @error('detail') is-invalid @enderror"
-                                                        id="detail" name="detail">
-                                                    <label for="detail">Detail</label>
-                                                    @error('detail')
+                                                        class="form-control mb-2 @error('desa') is-invalid @enderror"
+                                                        id="desa" name="desa">
+                                                    <label for="desa">Desa</label>
+                                                    @error('desa')
                                                         <div class="invalid-feedback mb-1">
                                                             {{ $message }}
                                                         </div>
                                                     @enderror
                                                 </div>
-                                                <div class="form-floating mb-2">
-                                                    <select class="form-select" id="category" name="category">
+                                                <div class="d-flex justify-content-between">
+                                                    <div class="form-floating" style="width: 49%">
+                                                        <select class="form-select" id="bentuk" name="bentuk">
+                                                            <option selected>-</option>
+                                                            <option value="Persegi">Persegi</option>
+                                                            <option value="Lingkaran">Lingkaran</option>
+                                                            <option value="Tidak Beraturan">Tidak Beraturan</option>
+                                                        </select>
+                                                        <label for="bentuk">Bentuk</label>
+                                                    </div>
+                                                    <div class="form-floating" style="width: 49%">
+                                                        <select class="form-select" id="ukuran" name="ukuran">
+                                                            <option selected>-</option>
+                                                            <option value="Besar">Besar</option>
+                                                            <option value="Sedang">Sedang</option>
+                                                            <option value="Kecil">Kecil</option>
+                                                        </select>
+                                                        <label for="ukuran">Ukuran</label>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex justify-content-between my-2">
+                                                    <div class="form-floating" style="width: 49%">
+                                                        <input type="text"
+                                                            class="form-control mb-2 @error('luasan') is-invalid @enderror"
+                                                            id="luasan" name="luasan">
+                                                        <label for="luasan">Luasan (M<sup>2</sup>)</label>
+                                                        @error('luasan')
+                                                            <div class="invalid-feedback mb-1">
+                                                                {{ $message }}
+                                                            </div>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="form-floating" style="width: 49%">
+                                                        <select class="form-select" id="strata" name="strata">
+                                                            <option selected>-</option>
+                                                            <option value="Tidak Bertingkat">Tidak Bertingkat</option>
+                                                            <option value="Bertingkat">Bertingkat</option>
+                                                        </select>
+                                                        <label for="strata">Strata</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-floating" style="width: 49%">
+                                                    <select class="form-select" id="kualitas_unsur"
+                                                        name="kualitas_unsur">
                                                         <option selected>-</option>
-                                                        @foreach ($categories as $category)
-                                                            <option value="{{ $category->id }}">{{ $category->name }}
-                                                            </option>
-                                                        @endforeach
+                                                        <option value="Baik">Baik</option>
+                                                        <option value="Rusak - Digunakan">Rusak - Digunakan</option>
+                                                        <option value="Tidak Digunakan">Tidak Digunakan</option>
                                                     </select>
-                                                    <label for="category">Kategori Gedung</label>
+                                                    <label for="kualitas_unsur">Kualitas/Kondisi Unsur</label>
+                                                </div>
+                                                <div class="form-floating my-2">
+                                                    <input type="text"
+                                                        class="form-control mb-2 @error('pemanfaatan_lain') is-invalid @enderror"
+                                                        id="pemanfaatan_lain" name="pemanfaatan_lain">
+                                                    <label for="pemanfaatan_lain">Pemanfaatan Lain <i
+                                                            class="text-muted">*Jika ada</i></label>
+                                                    @error('pemanfaatan_lain')
+                                                        <div class="invalid-feedback mb-1">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <div>
+                                                    <label for="sertifikat" class="text-muted">Bukti
+                                                        Kepemilikan/Sertifikat atas Hak
+                                                        Tanah</label>
+                                                    <input
+                                                        class="form-control mb-2 @error('sertifikat') is-invalid @enderror"
+                                                        type="file" id="sertifikat" name="sertifikat">
+                                                    @error('sertifikat')
+                                                        <div class="invalid-feedback mb-1">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
+                                                </div>
+                                                <div>
+                                                    <label for="image" class="text-muted">Foto Unsur</label>
                                                     <input
                                                         class="form-control mb-2 @error('image') is-invalid @enderror"
-                                                        type="file" id="image" name="image">
+                                                        type="file" id="images" name="image">
                                                     @error('image')
                                                         <div class="invalid-feedback mb-1">
                                                             {{ $message }}
                                                         </div>
                                                     @enderror
                                                 </div>
-                                                <div class="d-flex justify-content-between ">
-                                                    <div class="form-floating" style="width: 49%">
-                                                        <input type="text" class="form-control mb-2" id="latitude"
-                                                            name="latitude" readonly>
-                                                        <label for="latitude">Latitude</label>
-                                                    </div>
-                                                    <div class="form-floating" style="width: 49%">
-                                                        <input type="text" class="form-control mb-2" id="longitude"
-                                                            name="longitude" readonly>
-                                                        <label for="longitude">Longitude</label>
-                                                    </div>
-                                                </div>
                                                 <div class="form-floating">
-                                                    <select class="form-select" id="is_active" name="is_active">
-                                                        <option selected>-</option>
-                                                        <option value="1">Gedung Aktif</option>
-                                                        <option value="0">Gedung Tidak Aktif</option>
-                                                    </select>
-                                                    <label for="is_active">Status Gedung</label>
+                                                    <input type="text"
+                                                        class="form-control mb-2 @error('keterangan_tambahan') is-invalid @enderror"
+                                                        id="keterangan_tambahan" name="keterangan_tambahan">
+                                                    <label for="keterangan_tambahan">Keterangan Tambahan <i
+                                                            class="text-muted">*Optional</i></label>
+                                                    @error('keterangan_tambahan')
+                                                        <div class="invalid-feedback mb-1">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <button class="btn btn-info mt-2" type="submit">Tambah</button>
                                             </form>
@@ -171,8 +263,8 @@
 
 <!-- Script Leaflet -->
 <script>
-    var currentLat = document.getElementById('latitude').getAttribute('value');
-    var currentLng = document.getElementById('longitude').getAttribute('value');
+    var currentLat = document.getElementById('latitude').value;
+    var currentLng = document.getElementById('longitude').value;
 
     var map = L.map('map', {
         zoomControl: true
@@ -194,7 +286,7 @@
     }
 
     function showPosition(position) {
-        if (currentLat == null && currentLng == null) {
+        if (currentLat == "" && currentLng == "") {
             currentLat = position.coords.latitude;
             currentLng = position.coords.longitude;
         }
@@ -206,8 +298,8 @@
     function onMapClick(e) {
         var latitude = e.latlng['lat'];
         var longitude = e.latlng['lng'];
-        document.getElementById('latitude').setAttribute('value', e.latlng['lat']);
-        document.getElementById('longitude').setAttribute('value', e.latlng['lng']);
+        document.getElementById('latitude').value = e.latlng['lat'];
+        document.getElementById('longitude').value = e.latlng['lng'];
         map.removeLayer(marker);
         marker = L.marker([latitude, longitude]).addTo(map);
         map.panTo([latitude, longitude]);

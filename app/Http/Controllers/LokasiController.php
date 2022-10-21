@@ -15,7 +15,6 @@ class LokasiController extends Controller
         foreach ($lokasis as $lokasi) {
             array_push($lokasi_name, $lokasi['name']);
         }
-
         // dd($lokasis);
         return view('home', compact('lokasis', 'lokasi_name'));
     }
@@ -62,29 +61,40 @@ class LokasiController extends Controller
             [
                 'name' => 'required',
                 'address' => 'required',
-                'category' => 'required',
-                'detail' => 'required',
+                'desa' => 'required',
+                'latitude' => 'required',
+                'longitude' => 'required',
+                'luasan' => 'required|numeric',
                 'image' => 'required|image',
             ],
             [
                 'name.required' => 'Nama harus diisi',
                 'address.required' => 'Alamat harus diisi',
-                'category.required' => 'Kategori harus diisi',
-                'detail.required' => 'Detail harus diisi',
+                'desa.required' => 'Desa harus diisi',
+                'latitude.required' => 'Latitude harus diisi',
+                'longitude.required' => 'Longitude harus diisi',
                 'image.required' => 'Gambar harus diisi',
                 'image.image' => 'File yang diinput harus gambar',
             ]
         );
 
         $data = ([
-            'name' => $request->name,
-            'address' => $request->address,
             'category_id' => $request->category,
-            'detail' => $request->detail,
-            'image' => $request->image->store('lokasi-images'),
+            'name' => $request->name,
+            'nama_lain' => $request->nama_lain,
+            'address' => $request->address,
+            'desa' => $request->desa,
+            'bentuk' => $request->bentuk,
+            'ukuran' => $request->ukuran,
+            'luasan' => $request->luasan,
+            'strata' => $request->strata,
+            'kualitas_unsur' => $request->kualitas_unsur,
+            'pemanfaatan_lain' => $request->pemanfaatan_lain,
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
-            'is_active' => $request->is_active
+            'sertifikat' => $request->sertifikat != null ? $request->sertifikat->store('sertifikat-images') : '',
+            'keterangan_tambahan' => $request->keterangan_tambahan,
+            'image' => $request->image != null ? $request->image->store('lokasi-images') : ''
         ]);
 
         Lokasi::create($data);
@@ -93,29 +103,30 @@ class LokasiController extends Controller
 
     public function edit_lokasi(Request $request)
     {
+        if ($request->sertifikat != null) {
+            Storage::delete($request->sertifikat_old);
+        }
         if ($request->image != null) {
             Storage::delete($request->image_old);
-            Lokasi::where('id', $request->id)->update(array(
-                'name' => $request->name,
-                'address' => $request->address,
-                'detail' => $request->detail,
-                'category_id' => $request->category,
-                'image' => $request->image->store('lokasi-images'),
-                'latitude' => $request->latitude,
-                'longitude' => $request->longitude,
-                'is_active' => $request->is_active
-            ));
-        } else {
-            Lokasi::where('id', $request->id)->update(array(
-                'name' => $request->name,
-                'address' => $request->address,
-                'detail' => $request->detail,
-                'category_id' => $request->category,
-                'latitude' => $request->latitude,
-                'longitude' => $request->longitude,
-                'is_active' => $request->is_active
-            ));
         }
+
+        Lokasi::where('id', $request->id)->update(array(
+            'name' => $request->name,
+            'nama_lain' => $request->nama_lain,
+            'address' => $request->address,
+            'desa' => $request->desa,
+            'bentuk' => $request->bentuk,
+            'ukuran' => $request->ukuran,
+            'luasan' => $request->luasan,
+            'strata' => $request->strata,
+            'kualitas_unsur' => $request->kualitas_unsur,
+            'pemanfaatan_lain' => $request->pemanfaatan_lain,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'sertifikat' => $request->sertifikat != null ? $request->sertifikat->store('sertifikat_images') : $request->sertifikat_old,
+            'keterangan_tambahan' => $request->keterangan_tambahan,
+            'image' => $request->image != null ? $request->image->store('lokasi-images') : $request->image_old
+        ));
 
         return redirect('/detail');
     }
@@ -124,6 +135,7 @@ class LokasiController extends Controller
     {
         $lokasi = Lokasi::where('id', $id)->first();
         Storage::delete($lokasi->image);
+        Storage::delete($lokasi->sertifikat);
         Lokasi::where('id', $id)->delete();
         return back();
     }

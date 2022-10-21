@@ -19,12 +19,20 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Category::class);
             $table->string('name');
+            $table->string('nama_lain');
             $table->string('address');
-            $table->string('detail');
-            $table->string('image');
-            $table->integer('is_active')->default(1);
+            $table->string('desa');
+            $table->string('bentuk');
+            $table->string('ukuran');
+            $table->integer('luasan');
+            $table->string('strata');
+            $table->string('kualitas_unsur');
+            $table->string('pemanfaatan_lain')->nullable();
             $table->string('latitude');
             $table->string('longitude');
+            $table->string('sertifikat')->nullable();
+            $table->string('keterangan_tambahan')->nullable();
+            $table->string('image');
             $table->timestamps();
         });
     }

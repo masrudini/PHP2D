@@ -41,14 +41,15 @@
             max-width: 100%;
             max-height: 100%;
             border-radius: 10px;
+            background-color: white;
         }
 
         #map {
-            height: 100%;
+            height: 50vh;
             width: 100%;
         }
 
-        #detail {
+        /* #detail {
             white-space: nowrap;
             width: 100px;
             overflow: hidden;
@@ -64,15 +65,7 @@
         #hide-detail {
             cursor: pointer;
             color: rgb(118, 118, 240);
-        }
-
-        .latlng-container {
-            width: 250px;
-            padding: 14px 18px;
-            border-radius: 8px;
-            background-color: rgb(211, 209, 209);
-            font-weight: 700;
-        }
+        } */
     </style>
 </head>
 
@@ -92,6 +85,8 @@
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card" style="min-height: 70vh; max-heigth: 100vh;">
                                 <div class="card-body">
+                                    <a href="/detail" class="btn btn-light"><i
+                                            class="mdi mdi-arrow-left menu-icon"></i></a>
                                     <div class="d-flex justify-content-center mb-4">
                                         <h6 class="card-title">Detail Lokasi</h6>
                                     </div>
@@ -99,32 +94,44 @@
                                         <div class="d-flex justify-content-between">
                                             <div class="card" style="width: 50%; margin-right: 20px;">
                                                 <h3>{{ $lokasi->name }}</h3>
-                                                <section class="d-flex">
-                                                    <p id="detail">
-                                                        {{ $lokasi->detail }} <span id="hide-detail"
-                                                            onclick="hideDetail()">View less</span></p>
-                                                    <p id="btn-view-detail" onclick="viewDetail()">View More
-                                                    </p>
-                                                </section>
-                                                <h3>Alamat</h3>
-                                                <p>{{ $lokasi->address }}</p>
-                                                <div class="d-sm-block d-lg-flex mb-3">
-                                                    <div>
-                                                        <p class="mb-1" id="latlng-text">Latitude</p>
-                                                        <div class="latlng-container me-3">{{ $lokasi->latitude }}</div>
-                                                    </div>
-                                                    <div>
-                                                        <p class="mb-1" id="latlng-text">Longitude</p>
-                                                        <div class="latlng-container">{{ $lokasi->longitude }}</div>
+                                                <div class="overflow-auto">
+                                                    <p>Category : {{ $lokasi->category->name }}</p>
+                                                    <p>Nama Lain/Sebutan Lokal : {{ $lokasi->nama_lain }}</p>
+                                                    <p>Alamat : {{ $lokasi->address }}</p>
+                                                    <p>Desa : {{ $lokasi->desa }}</p>
+                                                    <p>Bentuk : {{ $lokasi->bentuk }}</p>
+                                                    <p>Ukuran : {{ $lokasi->ukuran }}</p>
+                                                    <p>Luasan : {{ $lokasi->luasan }} M<sup>2</sup></p>
+                                                    <p>Strata : {{ $lokasi->strata }}</p>
+                                                    <p>Kualitas Unsur : {{ $lokasi->kualitas_unsur }}</p>
+                                                    <p>Pemanfaatan Lain : {{ $lokasi->pemanfaatan_lain }}</p>
+                                                    <p>Keterangan Tambahan : {{ $lokasi->keterangan_tambahan }}</p>
+                                                    <div class="d-flex justify-content-between">
+                                                        <div class="form-floating" style="width: 49%">
+                                                            <input type="text" class="form-control mb-2"
+                                                                value="{{ $lokasi->latitude }}" readonly>
+                                                            <label for="latitude">Latitude</label>
+                                                        </div>
+                                                        <div class="form-floating" style="width: 49%">
+                                                            <input type="text" class="form-control mb-2"
+                                                                value="{{ $lokasi->longitude }}" readonly>
+                                                            <label for="longitude">Longitude</label>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <h3>Status</h3>
-                                                <p>{{ $lokasi->is_active == 1 ? 'Aktif' : 'Tidak Aktif' }}</p>
-                                                <button class="btn btn-primary" type="button"
-                                                    onclick="routeToLocation()">Rute</button>
                                             </div>
                                             <div class="leaflet-container">
                                                 <div id="map"></div>
+                                                <div class="d-flex justify-content-between">
+                                                    @if ($lokasi->sertifikat)
+                                                        <img src="{{ url('storage') }}/{{ $lokasi->sertifikat }}"
+                                                            style="width:49%; height: 200px;" class="rounded mt-2"
+                                                            alt="">
+                                                    @endif
+                                                    <img src="{{ url('storage') }}/{{ $lokasi->image }}"
+                                                        style="width:49%; height: 200px;" class="rounded mt-2"
+                                                        alt="">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -135,9 +142,7 @@
                 </div>
             </div>
         </div>
-
     </div>
-
 </body>
 <script src="{{ url('admin_template/assets/vendors/js/vendor.bundle.base.js') }}"></script>
 <script src="{{ url('admin_template/assets/vendors/chart.js/Chart.min.js') }}"></script>

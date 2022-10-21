@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -22,20 +23,38 @@ return new class extends Migration
         DB::table('categories')->insert(
             array(
                 [
-                    'name' => 'Gereja',
-                ],[
-                    'name' => 'Masjid',
-                ],[
-                    'name' => 'Bangunan Administrasi',
-                ],[
-                    'name' => 'Sekolah',
-                ],[
-                    'name' => 'PDAM',
-                ],[
-                    'name' => 'POM Bensin',
-                ],[
-                    'name' => 'Pabrik',
+                    'name' => 'Perkantoran',
                 ],
+                [
+                    'name' => 'Pendidikan',
+                ],
+                [
+                    'name' => 'Kesehatan',
+                ],
+                [
+                    'name' => 'Ibadah',
+                ],
+                [
+                    'name' => 'Wisata',
+                ],
+                [
+                    'name' => 'Olahraga'
+                ],
+                [
+                    'name' => 'Komunikasi'
+                ],
+                [
+                    'name' => 'Transmisi/Instalasi Listrik/Gas/Air Bersih'
+                ],
+                [
+                    'name' => 'Transportasi'
+                ],
+                [
+                    'name' => 'Pabrik'
+                ],
+                [
+                    'name' => 'Landmark'
+                ]
             )
         );
     }

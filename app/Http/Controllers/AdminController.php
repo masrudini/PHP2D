@@ -34,9 +34,9 @@ class AdminController extends Controller
     public function edit($id)
     {
         $categories = Category::all();
-        $lokasis = Lokasi::where('id', $id)->get();
+        $lokasi = Lokasi::where('id', $id)->first();
         // dd($lokasis);
-        return view('admin/pages/edit', compact('lokasis', 'categories'));
+        return view('admin/pages/edit', compact('lokasi', 'categories'));
     }
 
     public function detail_lokasi($id)
