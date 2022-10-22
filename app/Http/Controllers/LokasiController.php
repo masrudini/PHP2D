@@ -21,7 +21,7 @@ class LokasiController extends Controller
 
     public function aktif()
     {
-        $lokasis = Lokasi::where('is_active', 1)->get();
+        $lokasis = Lokasi::where('kualitas_unsur', 'Baik')->get();
         $lokasi_name = [];
         foreach ($lokasis as $lokasi) {
             array_push($lokasi_name, $lokasi['name']);
@@ -29,9 +29,19 @@ class LokasiController extends Controller
         return view('aktif', compact('lokasis', 'lokasi_name'));
     }
 
+    public function semi_aktif()
+    {
+        $lokasis = Lokasi::where('kualitas_unsur', 'Rusak - Digunakan')->get();
+        $lokasi_name = [];
+        foreach ($lokasis as $lokasi) {
+            array_push($lokasi_name, $lokasi['name']);
+        }
+        return view('semi_aktif', compact('lokasis', 'lokasi_name'));
+    }
+
     public function non_aktif()
     {
-        $lokasis = Lokasi::where('is_active', 0)->get();
+        $lokasis = Lokasi::where('kualitas_unsur', 0)->get();
         $lokasi_name = [];
         foreach ($lokasis as $lokasi) {
             array_push($lokasi_name, $lokasi['name']);
@@ -44,14 +54,22 @@ class LokasiController extends Controller
         $lokasi = Lokasi::all();
         return json_encode($lokasi);
     }
+
     public function lokasi_aktif()
     {
-        $lokasi = Lokasi::where('is_active', 1)->get();
+        $lokasi = Lokasi::where('kualitas_unsur', 'Baik')->get();
         return json_encode($lokasi);
     }
+
+    public function lokasi_semi_aktif()
+    {
+        $lokasi = Lokasi::where('kualitas_unsur', 'Rusak - Digunakan')->get();
+        return json_encode($lokasi);
+    }
+
     public function lokasi_non()
     {
-        $lokasi = Lokasi::where('is_active', 0)->get();
+        $lokasi = Lokasi::where('kualitas_unsur', 'Tidak Digunakan')->get();
         return json_encode($lokasi);
     }
 

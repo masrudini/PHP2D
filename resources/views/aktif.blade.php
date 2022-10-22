@@ -156,8 +156,11 @@
                                 Search by
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="/aktif" style="color: black;">Fasilitas Aktif</a>
-                                <a class="dropdown-item" href="/non-aktif" style="color: black;">Fasilitas Non-Aktif</a>
+                                <a class="dropdown-item" href="/aktif" style="color: black;">Fasilitas Baik</a>
+                                <a class="dropdown-item" href="/semi-aktif" style="color: black;">Fasilitas Rusak -
+                                    Digunakan</a>
+                                <a class="dropdown-item" href="/non-aktif" style="color: black;">Fasilitas Tidak
+                                    Digunakan</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="/" style="color: black;">Semua Fasilitas</a>
                             </div>
@@ -356,7 +359,7 @@
 
                 var icon_lainnya = L.icon({
                     iconUrl: 'images/icon_lainnya.png',
-                    iconSize: [20, 26],
+                    iconSize: [26, 31],
                     shadowSize: [50, 64],
                     iconAnchor: [15, 36],
                     shadowAnchor: [4, 62],
@@ -365,7 +368,7 @@
 
                 var icon_masjid = L.icon({
                     iconUrl: 'images/icon_masjid.png',
-                    iconSize: [20, 26],
+                    iconSize: [26, 31],
                     shadowSize: [50, 64],
                     iconAnchor: [15, 36],
                     shadowAnchor: [4, 62],
@@ -374,7 +377,7 @@
 
                 var icon_gereja = L.icon({
                     iconUrl: 'images/icon_gereja.png',
-                    iconSize: [20, 26],
+                    iconSize: [26, 31],
                     shadowSize: [50, 64],
                     iconAnchor: [15, 36],
                     shadowAnchor: [4, 62],
@@ -382,7 +385,7 @@
                 });
                 var icon_sekolah = L.icon({
                     iconUrl: 'images/icon_sekolah.png',
-                    iconSize: [20, 26],
+                    iconSize: [26, 31],
                     shadowSize: [50, 64],
                     iconAnchor: [15, 36],
                     shadowAnchor: [4, 62],
@@ -390,7 +393,7 @@
                 });
                 var icon_pabrik = L.icon({
                     iconUrl: 'images/icon_pabrik.png',
-                    iconSize: [20, 26],
+                    iconSize: [26, 31],
                     shadowSize: [50, 64],
                     iconAnchor: [15, 36],
                     shadowAnchor: [4, 62],
@@ -399,7 +402,7 @@
 
                 var icon_administrasi = L.icon({
                     iconUrl: 'images/icon_administrasi.png',
-                    iconSize: [20, 26],
+                    iconSize: [26, 31],
                     shadowSize: [50, 64],
                     iconAnchor: [15, 36],
                     shadowAnchor: [4, 62],
@@ -408,12 +411,13 @@
 
                 // console.log(data[index].category_id)
                 marker = L.marker([data[index].latitude, data[index].longitude], {
-                    icon: data[index].category_id == 1 ? icon_gereja : data[index]
+                    icon: data[index].category_id == 1 ? icon_masjid : data[index]
                         .category_id == 2 ?
-                        icon_masjid : data[index].category_id == 3 ? icon_administrasi :
+                        icon_gereja : data[index].category_id == 3 ? icon_administrasi :
                         data[index].category_id == 4 ? icon_sekolah : data[index] == 7 ?
                         icon_pabrik : icon_lainnya
                 }).addTo(map).bindPopup();
+
 
                 marker.on('mouseover', function(ev) {
                     const popupLocation = '<p>' + data[index].name;

@@ -353,7 +353,7 @@
     legend.addTo(map);
 
     $(document).ready(function() {
-        $.getJSON('lokasi-non/json', function(data) {
+        $.getJSON('lokasi-semi-aktif/json', function(data) {
             $.each(data, function(index) {
 
                 var icon_lainnya = L.icon({

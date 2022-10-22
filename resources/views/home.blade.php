@@ -155,8 +155,11 @@
                                 Search by
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="/aktif" style="color: black;">Fasilitas Aktif</a>
-                                <a class="dropdown-item" href="/non-aktif" style="color: black;">Fasilitas Non-Aktif</a>
+                                <a class="dropdown-item" href="/aktif" style="color: black;">Fasilitas Baik</a>
+                                <a class="dropdown-item" href="/semi-aktif" style="color: black;">Fasilitas Rusak -
+                                    Digunakan</a>
+                                <a class="dropdown-item" href="/non-aktif" style="color: black;">Fasilitas Tidak
+                                    Digunakan</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="/" style="color: black;">Semua Fasilitas</a>
                             </div>
