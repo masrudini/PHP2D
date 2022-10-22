@@ -125,6 +125,27 @@
             background-color: DodgerBlue !important;
             color: #ffffff;
         }
+
+        #legend-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .legend-items {
+            width: 0;
+            height: 0;
+            display: none;
+            transition: width 1s;
+        }
+
+        .legend-items.active {
+            width: auto;
+            display: block;
+            transition: width 1s;
+            height: auto;
+        }
     </style>
 
 </head>
@@ -335,22 +356,28 @@
     });
     legend.onAdd = function(map) {
         var div = L.DomUtil.create("div", "legend");
-        div.innerHTML += "<h4>Legenda</h4>";
         div.innerHTML +=
-            '<img src="images/icon_masjid.png" width="18px" class="icon py-2"></i><span class="px-2">Masjid</span><br>';
+            `<div id="legend-title"><h4>Legenda</h4><i id="legend-icon-down" onclick="showLegends()" class="ms-3 mdi mdi-chevron-down"></div>`;
         div.innerHTML +=
-            '<img src="images/icon_gereja.png" width="18px" class="icon py-2"></i><span class="px-2">Gereja</span><br>';
-        div.innerHTML +=
-            '<img src="images/icon_sekolah.png" width="18px" class="icon py-2"></i><span class="px-2">Sekolah</span><br>';
-        div.innerHTML +=
-            '<img src="images/icon_administrasi.png" width="18px" class="icon py-2"></i><span class="px-2">Bangunan Administrasi</span><br>';
-        div.innerHTML +=
-            '<img src="images/icon_pabrik.png" width="18px" class="icon py-2"></i><span class="px-2">Pabrik</span><br>';
-        div.innerHTML +=
-            '<img src="images/icon_lainnya.png" width="18px" class="icon py-2"></i><span class="px-2">Lainnya</span><br>';
+            `<div id="legend-items" class="legend-items active">
+                <img src="images/icon_masjid.png" width="18px" class="icon py-2"></i><span class="px-2">Masjid</span><br>
+                <img src="images/icon_gereja.png" width="18px" class="icon py-2"></i><span class="px-2">Gereja</span><br>
+                <img src="images/icon_sekolah.png" width="18px" class="icon py-2"></i><span class="px-2">Sekolah</span><br>
+                <img src="images/icon_administrasi.png" width="18px" class="icon py-2"></i><span class="px-2">Bangunan Administrasi</span><br>
+                <img src="images/icon_pabrik.png" width="18px" class="icon py-2"></i><span class="px-2">Pabrik</span><br>
+                <img src="images/icon_lainnya.png" width="18px" class="icon py-2"></i><span class="px-2">Lainnya</span><br>
+            </div>`;
         return div;
     };
     legend.addTo(map);
+
+    function showLegends() {
+        var icon = document.getElementById("legend-icon-down");
+        var legendItems = document.getElementById("legend-items");
+        icon.classList.toggle("mdi-chevron-down");
+        icon.classList.toggle("mdi-chevron-up");
+        legendItems.classList.toggle("active");
+    }
 
     $(document).ready(function() {
         $.getJSON('lokasi-semi-aktif/json', function(data) {
