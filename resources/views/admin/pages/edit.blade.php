@@ -285,36 +285,59 @@
 
 <!-- Script Leaflet -->
 <script>
-    var currentLat = document.getElementById('latitude').getAttribute('value');
-    var currentLng = document.getElementById('longitude').getAttribute('value');
+    var currentLat = document.getElementById('latitude').value;
+    var currentLng = document.getElementById('longitude').value;
+
 
     var map = L.map('map', {
         zoomControl: true
     }).setView([-0.05652732759345948, 109.17823055147235], 13);
-
+    var marker = L.marker([-0.05652732759345948, 109.17823055147235], {
+        draggable: true
+    }).addTo(map);
     var tiles = L.tileLayer(
         'http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
             maxZoom: 30,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
         }).addTo(map);
 
-    marker = L.marker([currentLat, currentLng]).addTo(map);
-    map.panTo([currentLat, currentLng]);
-    map.flyTo([currentLat, currentLng], 17);
 
-    function onMapClick(e) {
-        var latitude = e.latlng['lat'];
-        var longitude = e.latlng['lng'];
-        document.getElementById('latitude').value = e.latlng['lat'];
-        document.getElementById('longitude').value = e.latlng['lng'];
-        map.removeLayer(marker);
-        marker = L.marker([latitude, longitude]).addTo(map);
-        map.panTo([latitude, longitude]);
-        map.flyTo([latitude, longitude], 17);
+    getLocation();
+
+    async function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        }
     }
-    map.on('click', function(e) {
-        onMapClick(e);
+
+    function showPosition(position) {
+        if (currentLat == "" && currentLng == "") {
+            currentLat = position.coords.latitude;
+            currentLng = position.coords.longitude;
+        }
+        marker.setLatLng([currentLat, currentLng]).addTo(map);
+        map.panTo([currentLat, currentLng]);
+        map.flyTo([currentLat, currentLng], 18);
+    }
+
+    marker.on('dragend', function(e) {
+        updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
     });
+    map.on('click', function(e) {
+        marker.setLatLng(e.latlng);
+        updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
+    });
+
+    function updateLatLng(lat, lng, reverse) {
+        if (reverse) {
+            marker.setLatLng([lat, lng]);
+            map.panTo([lat, lng]);
+        } else {
+            document.getElementById('latitude').value = marker.getLatLng().lat;
+            document.getElementById('longitude').value = marker.getLatLng().lng;
+            map.panTo([lat, lng]);
+        }
+    }
 </script>
 
 </html>
