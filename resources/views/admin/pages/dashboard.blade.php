@@ -128,53 +128,99 @@
     $(document).ready(function() {
         $.getJSON('lokasi/json', function(data) {
             $.each(data, function(index) {
+                var icon_perkantoran = L.icon({
+                    iconUrl: '/images/icon_perkantoran.png',
+                    iconSize: [26, 35],
+                    shadowSize: [50, 64],
+                    iconAnchor: [15, 36],
+                    shadowAnchor: [4, 62],
+                    popupAnchor: [-3, -76]
+                });
+
+                var icon_pendidikan = L.icon({
+                    iconUrl: '/images/icon_pendidikan.png',
+                    iconSize: [26, 35],
+                    shadowSize: [50, 64],
+                    iconAnchor: [15, 36],
+                    shadowAnchor: [4, 62],
+                    popupAnchor: [-3, -76]
+                });
+
+                var icon_kesehatan = L.icon({
+                    iconUrl: '/images/icon_kesehatan.png',
+                    iconSize: [26, 35],
+                    shadowSize: [50, 64],
+                    iconAnchor: [15, 36],
+                    shadowAnchor: [4, 62],
+                    popupAnchor: [-3, -76]
+                });
+
+                var icon_ibadah = L.icon({
+                    iconUrl: '/images/icon_ibadah.png',
+                    iconSize: [26, 35],
+                    shadowSize: [50, 64],
+                    iconAnchor: [15, 36],
+                    shadowAnchor: [4, 62],
+                    popupAnchor: [-3, -76]
+                });
+
+                var icon_wisata = L.icon({
+                    iconUrl: '/images/icon_wisata.png',
+                    iconSize: [26, 35],
+                    shadowSize: [50, 64],
+                    iconAnchor: [15, 36],
+                    shadowAnchor: [4, 62],
+                    popupAnchor: [-3, -76]
+                });
+
+                var icon_olahraga = L.icon({
+                    iconUrl: '/images/icon_olahraga.png',
+                    iconSize: [26, 35],
+                    shadowSize: [50, 64],
+                    iconAnchor: [15, 36],
+                    shadowAnchor: [4, 62],
+                    popupAnchor: [-3, -76]
+                });
+
+                var icon_komunikasi = L.icon({
+                    iconUrl: '/images/icon_komunikasi.png',
+                    iconSize: [26, 35],
+                    shadowSize: [50, 64],
+                    iconAnchor: [15, 36],
+                    shadowAnchor: [4, 62],
+                    popupAnchor: [-3, -76]
+                });
+
+                var icon_transmisi = L.icon({
+                    iconUrl: '/images/icon_transmisi.png',
+                    iconSize: [26, 35],
+                    shadowSize: [50, 64],
+                    iconAnchor: [15, 36],
+                    shadowAnchor: [4, 62],
+                    popupAnchor: [-3, -76]
+                });
+
+                var icon_transportasi = L.icon({
+                    iconUrl: '/images/icon_transportasi.png',
+                    iconSize: [26, 35],
+                    shadowSize: [50, 64],
+                    iconAnchor: [15, 36],
+                    shadowAnchor: [4, 62],
+                    popupAnchor: [-3, -76]
+                });
+
+                var icon_pabrik = L.icon({
+                    iconUrl: '/images/icon_pabrik.png',
+                    iconSize: [26, 35],
+                    shadowSize: [50, 64],
+                    iconAnchor: [15, 36],
+                    shadowAnchor: [4, 62],
+                    popupAnchor: [-3, -76]
+                });
 
                 var icon_lainnya = L.icon({
-                    iconUrl: 'images/icon_lainnya.png',
-                    iconSize: [20, 26],
-                    shadowSize: [50, 64],
-                    iconAnchor: [15, 36],
-                    shadowAnchor: [4, 62],
-                    popupAnchor: [-3, -76]
-                });
-
-                var icon_masjid = L.icon({
-                    iconUrl: 'images/icon_masjid.png',
-                    iconSize: [20, 26],
-                    shadowSize: [50, 64],
-                    iconAnchor: [15, 36],
-                    shadowAnchor: [4, 62],
-                    popupAnchor: [-3, -76]
-                });
-
-                var icon_gereja = L.icon({
-                    iconUrl: 'images/icon_gereja.png',
-                    iconSize: [20, 26],
-                    shadowSize: [50, 64],
-                    iconAnchor: [15, 36],
-                    shadowAnchor: [4, 62],
-                    popupAnchor: [-3, -76]
-                });
-                var icon_sekolah = L.icon({
-                    iconUrl: 'images/icon_sekolah.png',
-                    iconSize: [20, 26],
-                    shadowSize: [50, 64],
-                    iconAnchor: [15, 36],
-                    shadowAnchor: [4, 62],
-                    popupAnchor: [-3, -76]
-                });
-                var icon_pabrik = L.icon({
-                    iconUrl: 'images/icon_pabrik.png',
-                    iconSize: [20, 26],
-                    shadowSize: [50, 64],
-                    iconAnchor: [15, 36],
-                    shadowAnchor: [4, 62],
-                    popupAnchor: [-3, -76]
-                });
-
-                var icon_administrasi = L.icon({
-                    iconUrl: 'images/icon_administrasi.png',
-                    iconSize: [20, 26],
+                    iconUrl: '/images/icon_lainnya.png',
+                    iconSize: [26, 35],
                     shadowSize: [50, 64],
                     iconAnchor: [15, 36],
                     shadowAnchor: [4, 62],
@@ -183,14 +229,19 @@
 
                 // console.log(data[index].category_id)
                 marker = L.marker([data[index].latitude, data[index].longitude], {
-                    icon: data[index].category_id == 1 ? icon_masjid : data[index]
+                    icon: data[index].category_id == 1 ? icon_perkantoran : data[index]
                         .category_id == 2 ?
-                        icon_gereja : data[index].category_id == 3 ? icon_administrasi :
-                        data[index].category_id == 4 ? icon_sekolah : data[index]
-                        .category_id == 7 ?
-                        icon_pabrik : data[index].category_id == 8 ? icon_lainnya :
-                        data[index].category_id == 9 ? icon_lainnya : data[index]
-                        .category_id == 10 ? icon_lainnya : icon_lainnya
+                        icon_pendidikan : data[index].category_id == 3 ?
+                        icon_kesehatan : data[index].category_id == 4 ? icon_ibadah :
+                        data[index]
+                        .category_id == 5 ? icon_wisata : data[index].category_id ==
+                        6 ? icon_olahraga : data[index]
+                        .category_id == 7 ? icon_komunikasi : data[index].category_id ==
+                        8 ?
+                        icon_transmisi : data[index].category_id == 9 ?
+                        icon_transportasi : data[
+                            index].category_id == 10 ? icon_pabrik : data[index]
+                        .category_id == 11 ? icon_lainnya : icon_lainnya
                 }).addTo(map).bindPopup();
 
                 marker.on('mouseover', function(ev) {

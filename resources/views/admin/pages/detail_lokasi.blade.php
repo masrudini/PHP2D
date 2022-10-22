@@ -158,7 +158,7 @@
 
 <script src="{{ url('js/L.Control.MousePosition.js') }}"></script>
 
-<script>
+{{-- <script>
     function hideDetail() {
         var e = document.getElementById("detail");
         var eBtn = document.getElementById("btn-view-detail");
@@ -179,9 +179,8 @@
         eBtn.style.display = "none";
         console.log(e.innerHTML);
     }
-</script>
+</script> --}}
 
-<script></script>
 
 <!-- Script Leaflet -->
 <script>

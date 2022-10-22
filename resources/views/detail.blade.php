@@ -37,18 +37,19 @@
 
         .leaflet-container {
             min-height: 50vh;
-            width: 50vw;
+            width: 60%;
             max-width: 100%;
             max-height: 100%;
             border-radius: 10px;
+            background-color: white;
         }
 
         #map {
-            height: 100%;
+            height: 50vh;
             width: 100%;
         }
 
-        #detail {
+        /* #detail {
             white-space: nowrap;
             width: 100px;
             overflow: hidden;
@@ -64,67 +65,72 @@
         #hide-detail {
             cursor: pointer;
             color: rgb(118, 118, 240);
-        }
-
-        .latlng-container {
-            /* width: 250px; */
-            padding: 14px 18px;
-            border-radius: 8px;
-            background-color: rgb(211, 209, 209);
-            font-weight: 700;
-        }
+        } */
     </style>
 </head>
 
 <body>
-
-    <div class="d-flex justify-content-center align-items-center"
-        style="height: 100vh; background-color:rgb(236, 243, 243);">
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-
-                        <a class="p-2 mb-3" href="/"
-                            style="color: white; font-weight: bold; background-color:#B66DFF; border-radius: 8px;"><i
-                                class="mdi mdi-arrow-left align-self-center"></i></a>
-
-                        <div class="card-title mt-3">
-                            <h3 class="">Detail Lokasi</h3>
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <div class="card-text">
-                                <h3>{{ $lokasi->name }}</h3>
-                                <section class="d-flex">
-                                    <p id="detail">
-                                        {{ $lokasi->detail }} <span id="hide-detail" onclick="hideDetail()">View
-                                            less</span></p>
-                                    <p id="btn-view-detail" onclick="viewDetail()">View More
-                                    </p>
-                                </section>
-                                <h3>Alamat</h3>
-                                <p>{{ $lokasi->address }}</p>
-                                <h3>Kategori</h3>
-                                <p>{{ $lokasi->category->name }}</p>
-                                <div class="d-sm-block d-lg-flex mb-3">
-                                    <div>
-                                        <p class="mb-1" id="latlng-text">Latitude</p>
-                                        <div class="latlng-container me-3">{{ $lokasi->latitude }}</div>
+    <div class="container-scroller">
+        <div class="container-fluid page-body-wrapper">
+            <div class="main-panel" style="width: 100%">
+                <div class="content-wrapper">
+                    <div class="row">
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card" style="min-height: 70vh; max-heigth: 100vh;">
+                                <div class="card-body">
+                                    <a href="/" class="btn btn-light"><i
+                                            class="mdi mdi-arrow-left menu-icon"></i></a>
+                                    <div class="d-flex justify-content-center mb-4">
+                                        <h6 class="card-title">Detail Lokasi</h6>
                                     </div>
-                                    <div>
-                                        <p class="mb-1" id="latlng-text">Longitude</p>
-                                        <div class="latlng-container">{{ $lokasi->longitude }}</div>
+                                    <div class="overflow-auto">
+                                        <div class="d-flex justify-content-between">
+                                            <div class="card" style="width: 50%; margin-right: 20px;">
+                                                <h3>{{ $lokasi->name }}</h3>
+                                                <div class="overflow-auto">
+                                                    <p>Category : {{ $lokasi->category->name }}</p>
+                                                    <p>Nama Lain/Sebutan Lokal : {{ $lokasi->nama_lain }}</p>
+                                                    <p>Alamat : {{ $lokasi->address }}</p>
+                                                    <p>Desa : {{ $lokasi->desa }}</p>
+                                                    <p>Bentuk : {{ $lokasi->bentuk }}</p>
+                                                    <p>Ukuran : {{ $lokasi->ukuran }}</p>
+                                                    <p>Luasan : {{ $lokasi->luasan }} M<sup>2</sup></p>
+                                                    <p>Strata : {{ $lokasi->strata }}</p>
+                                                    <p>Kualitas Unsur : {{ $lokasi->kualitas_unsur }}</p>
+                                                    <p>Pemanfaatan Lain : {{ $lokasi->pemanfaatan_lain }}</p>
+                                                    <p>Keterangan Tambahan : {{ $lokasi->keterangan_tambahan }}</p>
+                                                    <div class="d-flex justify-content-between">
+                                                        <div class="form-floating" style="width: 49%">
+                                                            <input type="text" class="form-control mb-2"
+                                                                value="{{ $lokasi->latitude }}" readonly>
+                                                            <label for="latitude">Latitude</label>
+                                                        </div>
+                                                        <div class="form-floating" style="width: 49%">
+                                                            <input type="text" class="form-control mb-2"
+                                                                value="{{ $lokasi->longitude }}" readonly>
+                                                            <label for="longitude">Longitude</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="leaflet-container">
+                                                <div id="map"></div>
+                                                <div class="d-flex justify-content-between">
+                                                    @if ($lokasi->sertifikat)
+                                                        <img src="{{ url('storage') }}/{{ $lokasi->sertifikat }}"
+                                                            style="width:49%; height: 200px;" class="rounded mt-2"
+                                                            alt="">
+                                                    @endif
+                                                    <img src="{{ url('storage') }}/{{ $lokasi->image }}"
+                                                        style="width:49%; height: 200px;" class="rounded mt-2"
+                                                        alt="">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <h3>Status</h3>
-                                <p>{{ $lokasi->is_active == 1 ? 'Aktif' : 'Tidak Aktif' }}</p>
-                                <button class="btn btn-primary" type="button" onclick="routeToLocation()">Rute</button>
-                            </div>
-                            <div class="leaflet-container ms-5">
-                                <div id="map"></div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -145,7 +151,7 @@
 
 <script src="{{ url('js/L.Control.MousePosition.js') }}"></script>
 
-<script>
+{{-- <script>
     function hideDetail() {
         var e = document.getElementById("detail");
         var eBtn = document.getElementById("btn-view-detail");
@@ -166,41 +172,20 @@
         eBtn.style.display = "none";
         console.log(e.innerHTML);
     }
-</script>
+</script> --}}
 
-<script></script>
 
 <!-- Script Leaflet -->
 <script>
     // var userLat, userLng;
     var currentLat = "<?php echo $lokasi->latitude; ?>";
     var currentLng = "<?php echo $lokasi->longitude; ?>";
+    var category = "<?php echo $lokasi->category_id; ?>";
 
 
     var map = L.map('map', {
         zoomControl: true
     }).setView([-0.05652732759345948, 109.17823055147235], 13);
-
-    function showPosition(pos) {
-        userLat = pos.coords.latitude;
-        userLng = pos.coords.longitude;
-    }
-
-    if (!navigator.geolocation) {
-        console.log("Location denied");
-    } else {
-        navigator.geolocation.getCurrentPosition(showPosition);
-    }
-
-    function routeToLocation() {
-        L.Routing.control({
-            waypoints: [
-                L.latLng(userLat, userLng),
-                L.latLng(currentLat, currentLng)
-            ],
-        }).addTo(map);
-        map.flyTo([userLat, userLng]);
-    }
 
     var tiles = L.tileLayer(
         'http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
@@ -208,7 +193,113 @@
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
         }).addTo(map);
 
-    marker = L.marker([currentLat, currentLng]).addTo(map);
+    var icon_perkantoran = L.icon({
+        iconUrl: '/images/icon_perkantoran.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var icon_pendidikan = L.icon({
+        iconUrl: '/images/icon_pendidikan.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var icon_kesehatan = L.icon({
+        iconUrl: '/images/icon_kesehatan.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var icon_ibadah = L.icon({
+        iconUrl: '/images/icon_ibadah.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var icon_wisata = L.icon({
+        iconUrl: '/images/icon_wisata.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var icon_olahraga = L.icon({
+        iconUrl: '/images/icon_olahraga.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var icon_komunikasi = L.icon({
+        iconUrl: '/images/icon_komunikasi.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var icon_transmisi = L.icon({
+        iconUrl: '/images/icon_transmisi.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var icon_transportasi = L.icon({
+        iconUrl: '/images/icon_transportasi.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var icon_pabrik = L.icon({
+        iconUrl: '/images/icon_pabrik.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var icon_lainnya = L.icon({
+        iconUrl: '/images/icon_lainnya.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    // console.log(data[index].category_id)
+    marker = L.marker([currentLat, currentLng], {
+        icon: category == 1 ? icon_perkantoran : category == 2 ?
+            icon_pendidikan : category == 3 ? icon_kesehatan : category == 4 ?
+            icon_ibadah : category == 5 ? icon_wisata : category == 6 ? icon_olahraga : category ==
+            7 ? icon_komunikasi : category == 8 ? icon_transmisi : category == 9 ?
+            icon_transportasi : category == 10 ? icon_pabrik : category == 11 ? icon_lainnya : icon_lainnya
+    }).addTo(map);
     map.panTo([currentLat, currentLng]);
     map.flyTo([currentLat, currentLng], 18);
 </script>

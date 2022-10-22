@@ -41,7 +41,7 @@ class LokasiController extends Controller
 
     public function non_aktif()
     {
-        $lokasis = Lokasi::where('kualitas_unsur', 0)->get();
+        $lokasis = Lokasi::where('kualitas_unsur', 'Tidak Digunakan')->get();
         $lokasi_name = [];
         foreach ($lokasis as $lokasi) {
             array_push($lokasi_name, $lokasi['name']);
@@ -152,8 +152,12 @@ class LokasiController extends Controller
     public function delete($id)
     {
         $lokasi = Lokasi::where('id', $id)->first();
-        Storage::delete($lokasi->image);
-        Storage::delete($lokasi->sertifikat);
+        if ($lokasi->image) {
+            Storage::delete($lokasi->image);
+        }
+        if ($lokasi->sertifikat) {
+            Storage::delete($lokasi->sertifikat);
+        }
         Lokasi::where('id', $id)->delete();
         return back();
     }

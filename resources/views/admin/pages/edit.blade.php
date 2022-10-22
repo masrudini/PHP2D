@@ -251,7 +251,7 @@
                                                     id="image_old">
                                                 <input type="hidden" value="{{ $lokasi->sertifikat }}"
                                                     name="sertifikat_old" id="sertifikat_old">
-                                                <button class="btn btn-info mt-2" type="submit">Tambah</button>
+                                                <button class="btn btn-info mt-2" type="submit">Save</button>
                                             </form>
                                             <div class="leaflet-container">
                                                 <div id="map"></div>
