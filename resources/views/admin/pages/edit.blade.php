@@ -214,7 +214,7 @@
                                                         Tanah</label>
                                                     <input
                                                         class="form-control mb-2 @error('sertifikat') is-invalid @enderror"
-                                                        type="file" id="sertifikat" name="sertifikat">
+                                                        type="file" id="sertifikat" name="sertifikat[]" multiple>
                                                     @error('sertifikat')
                                                         <div class="invalid-feedback mb-1">
                                                             {{ $message }}
@@ -225,7 +225,7 @@
                                                     <label for="image" class="text-muted">Foto Unsur</label>
                                                     <input
                                                         class="form-control mb-2 @error('image') is-invalid @enderror"
-                                                        type="file" id="images" name="image">
+                                                        type="file" id="images" name="image[]" multiple>
                                                     @error('image')
                                                         <div class="invalid-feedback mb-1">
                                                             {{ $message }}
@@ -245,12 +245,8 @@
                                                         </div>
                                                     @enderror
                                                 </div>
-                                                <input type="hidden" value="{{ $lokasi->id }}" name="id"
-                                                    id="id">
-                                                <input type="hidden" value="{{ $lokasi->image }}" name="image_old"
-                                                    id="image_old">
-                                                <input type="hidden" value="{{ $lokasi->sertifikat }}"
-                                                    name="sertifikat_old" id="sertifikat_old">
+                                                <input type="hidden" value="{{ $lokasi->id }}" name="lokasi_id"
+                                                    id="lokasi_id">
                                                 <button class="btn btn-info mt-2" type="submit">Save</button>
                                             </form>
                                             <div class="leaflet-container">

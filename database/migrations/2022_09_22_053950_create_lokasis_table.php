@@ -30,9 +30,7 @@ return new class extends Migration
             $table->string('pemanfaatan_lain')->nullable();
             $table->string('latitude');
             $table->string('longitude');
-            $table->string('sertifikat')->nullable();
             $table->string('keterangan_tambahan')->nullable();
-            $table->string('image');
             $table->timestamps();
         });
     }

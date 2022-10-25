@@ -115,16 +115,86 @@
                                             </div>
                                             <div class="leaflet-container">
                                                 <div id="map"></div>
-                                                <div class="d-flex justify-content-between">
-                                                    @if ($lokasi->sertifikat)
-                                                        <img src="{{ url('storage') }}/{{ $lokasi->sertifikat }}"
-                                                            style="width:49%; height: 200px;" class="rounded mt-2"
-                                                            alt="">
-                                                    @endif
-                                                    <img src="{{ url('storage') }}/{{ $lokasi->image }}"
-                                                        style="width:49%; height: 200px;" class="rounded mt-2"
-                                                        alt="">
+                                                <div class="d-flex justify-content-center mt-2">
+                                                    <h4><b>Foto Unsur :</b></h4>
                                                 </div>
+                                                <div id="carouselExampleControls1" class="carousel slide"
+                                                    data-bs-ride="carousel">
+                                                    <div class="carousel-inner">
+                                                        @foreach ($lokasi_images as $lokasi_image)
+                                                            @if ($loop->first)
+                                                                <div class="carousel-item active">
+                                                                    <div class="d-flex justify-content-center">
+                                                                        <img src="{{ url('storage') }}/{{ $lokasi_image->image }}"
+                                                                            style="height: 200px; width:60%;"
+                                                                            class="d-block rounded mt-2" alt="">
+                                                                    </div>
+                                                                </div>
+                                                            @else
+                                                                <div class="carousel-item">
+                                                                    <div class="d-flex justify-content-center">
+                                                                        <img src="{{ url('storage') }}/{{ $lokasi_image->image }}"
+                                                                            style="height: 200px;"
+                                                                            class="d-block rounded mt-2" alt="">
+                                                                    </div>
+                                                                </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
+                                                    <button class="carousel-control-prev" type="button"
+                                                        data-bs-target="#carouselExampleControls1" data-bs-slide="prev">
+                                                        <span class="carousel-control-prev-icon"
+                                                            style="background-color: black"></span>
+                                                    </button>
+                                                    <button class="carousel-control-next" type="button"
+                                                        data-bs-target="#carouselExampleControls1" data-bs-slide="next">
+                                                        <span class="carousel-control-next-icon"
+                                                            style="background-color: black"></span>
+                                                    </button>
+                                                </div>
+                                                @if (count($sertifikat_images) != 0)
+                                                    <div class="d-flex justify-content-center mt-2">
+                                                        <h4><b>Bukti Kepemilikan/Sertifikat atas Hak Tanah :</b></h4>
+                                                    </div>
+                                                    <div id="carouselExampleControls2" class="carousel slide"
+                                                        data-bs-ride="carousel">
+                                                        <div class="carousel-inner">
+                                                            @foreach ($sertifikat_images as $sertifikat_image)
+                                                                @if ($loop->first)
+                                                                    <div class="carousel-item active">
+                                                                        <div class="d-flex justify-content-center">
+                                                                            <img src="{{ url('storage') }}/{{ $sertifikat_image->image }}"
+                                                                                style="height: 200px; width:60%;"
+                                                                                class="d-block rounded mt-2"
+                                                                                alt="">
+                                                                        </div>
+                                                                    </div>
+                                                                @else
+                                                                    <div class="carousel-item">
+                                                                        <div class="d-flex justify-content-center">
+                                                                            <img src="{{ url('storage') }}/{{ $sertifikat_image->image }}"
+                                                                                style="height: 200px;"
+                                                                                class="d-block rounded mt-2"
+                                                                                alt="">
+                                                                        </div>
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+                                                        <button class="carousel-control-prev" type="button"
+                                                            data-bs-target="#carouselExampleControls2"
+                                                            data-bs-slide="prev">
+                                                            <span class="carousel-control-prev-icon"
+                                                                style="background-color: black"></span>
+                                                        </button>
+                                                        <button class="carousel-control-next" type="button"
+                                                            data-bs-target="#carouselExampleControls2"
+                                                            data-bs-slide="next">
+                                                            <span class="carousel-control-next-icon"
+                                                                style="background-color: black"></span>
+                                                        </button>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>

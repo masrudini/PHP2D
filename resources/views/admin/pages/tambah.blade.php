@@ -199,7 +199,7 @@
                                                         Tanah</label>
                                                     <input
                                                         class="form-control mb-2 @error('sertifikat') is-invalid @enderror"
-                                                        type="file" id="sertifikat" name="sertifikat">
+                                                        type="file" id="sertifikat" name="sertifikat[]" multiple>
                                                     @error('sertifikat')
                                                         <div class="invalid-feedback mb-1">
                                                             {{ $message }}
@@ -210,7 +210,7 @@
                                                     <label for="image" class="text-muted">Foto Unsur</label>
                                                     <input
                                                         class="form-control mb-2 @error('image') is-invalid @enderror"
-                                                        type="file" id="images" name="image">
+                                                        type="file" id="images" name="image[]" multiple>
                                                     @error('image')
                                                         <div class="invalid-feedback mb-1">
                                                             {{ $message }}
@@ -292,6 +292,7 @@
         if (currentLat == "" && currentLng == "") {
             currentLat = position.coords.latitude;
             currentLng = position.coords.longitude;
+            updateLatLng(currentLat, currentLng);
         }
         marker.setLatLng([currentLat, currentLng]).addTo(map);
         map.panTo([currentLat, currentLng]);

@@ -200,7 +200,9 @@
     </div>
     <div class="container-scroller">
         <div class="leaflet-container">
-            <div id="map"></div>
+            <div id="map">
+                <input type="hidden" id="image" value="{{ $image }}">
+            </div>
         </div>
     </div>
 </body>
@@ -389,6 +391,9 @@
         legendItems.classList.toggle("active");
     }
 
+    var image = document.getElementById("image");
+    var images = image.value.split(',');
+
     $(document).ready(function() {
         $.getJSON('lokasi-non/json', function(data) {
             $.each(data, function(index) {
@@ -516,8 +521,8 @@
                 marker.on('click', function(ev) {
                     const popupContent =
                         '<h4>' + data[index].name + '</h4>' +
-                        '<img height="150px" width="100%"  src="storage/' + data[
-                            index].image + '">' + '</div>' +
+                        '<img height="150px" width="100%"  src="storage/' + images[
+                            index] + '">' + '</div>' +
                         '<div class="d-flex justify-content-between">' +
                         '<button class="btn btn-info mt-3 me-1" onclick="routing(' +
                         data[

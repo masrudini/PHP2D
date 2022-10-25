@@ -79,7 +79,9 @@
                         <div class="container-fluid page-body-wrapper">
                             <div class="card">
                                 <div class="leaflet-container">
-                                    <div id="map"></div>
+                                    <div id="map">
+                                        <input type="hidden" id="image" value="{{ $image }}">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -125,9 +127,13 @@
         }).addTo(map);
     // map.flyTo([currentLat, currentLng]);
 
+    var image = document.getElementById("image");
+    var images = image.value.split(',');
+
     $(document).ready(function() {
         $.getJSON('lokasi/json', function(data) {
             $.each(data, function(index) {
+
                 var icon_perkantoran = L.icon({
                     iconUrl: '/images/icon_perkantoran.png',
                     iconSize: [26, 35],
@@ -229,14 +235,16 @@
 
                 // console.log(data[index].category_id)
                 marker = L.marker([data[index].latitude, data[index].longitude], {
-                    icon: data[index].category_id == 1 ? icon_perkantoran : data[index]
+                    icon: data[index].category_id == 1 ? icon_perkantoran : data[
+                            index]
                         .category_id == 2 ?
                         icon_pendidikan : data[index].category_id == 3 ?
-                        icon_kesehatan : data[index].category_id == 4 ? icon_ibadah :
-                        data[index]
+                        icon_kesehatan : data[index].category_id == 4 ?
+                        icon_ibadah : data[index]
                         .category_id == 5 ? icon_wisata : data[index].category_id ==
                         6 ? icon_olahraga : data[index]
-                        .category_id == 7 ? icon_komunikasi : data[index].category_id ==
+                        .category_id == 7 ? icon_komunikasi : data[index]
+                        .category_id ==
                         8 ?
                         icon_transmisi : data[index].category_id == 9 ?
                         icon_transportasi : data[
@@ -252,8 +260,8 @@
                 marker.on('click', function(ev) {
                     const popupContent =
                         '<h4>' + data[index].name + '</h4>' +
-                        '<img height="150px" width="100%"  src="storage/' + data[
-                            index].image + '">' + '</div>'
+                        '<img height="150px" width="100%"  src="storage/' + images[
+                            index] + '">' + '</div>'
                     ev.target.bindPopup(popupContent).openPopup();
                 });
             });

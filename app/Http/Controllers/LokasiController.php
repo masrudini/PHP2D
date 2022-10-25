@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lokasi;
+use App\Models\UnsurImage;
 use Illuminate\Http\Request;
+use App\Models\SertifikatImage;
+use Illuminate\Contracts\Cache\Store;
 use Illuminate\Support\Facades\Storage;
 
 class LokasiController extends Controller
@@ -12,41 +15,64 @@ class LokasiController extends Controller
     {
         $lokasis = Lokasi::All();
         $lokasi_name = [];
+        $images = [];
         foreach ($lokasis as $lokasi) {
-            array_push($lokasi_name, $lokasi['name']);
+            array_push($lokasi_name, $lokasi->name);
+            $ui = UnsurImage::where('lokasi_id', $lokasi->id)->first();
+            array_push($images, $ui->image);
         }
-        // dd($lokasis);
-        return view('home', compact('lokasis', 'lokasi_name'));
+
+        $image = join(',', $images);
+
+        return view('home', compact('lokasis', 'lokasi_name', 'image'));
     }
 
     public function aktif()
     {
         $lokasis = Lokasi::where('kualitas_unsur', 'Baik')->get();
         $lokasi_name = [];
+        $images = [];
         foreach ($lokasis as $lokasi) {
-            array_push($lokasi_name, $lokasi['name']);
+            array_push($lokasi_name, $lokasi->name);
+            $ui = UnsurImage::where('lokasi_id', $lokasi->id)->first();
+            array_push($images, $ui->image);
         }
-        return view('aktif', compact('lokasis', 'lokasi_name'));
+
+        $image = join(',', $images);
+
+        return view('aktif', compact('lokasis', 'lokasi_name', 'image'));
     }
 
     public function semi_aktif()
     {
         $lokasis = Lokasi::where('kualitas_unsur', 'Rusak - Digunakan')->get();
         $lokasi_name = [];
+        $images = [];
         foreach ($lokasis as $lokasi) {
-            array_push($lokasi_name, $lokasi['name']);
+            array_push($lokasi_name, $lokasi->name);
+            $ui = UnsurImage::where('lokasi_id', $lokasi->id)->first();
+            array_push($images, $ui->image);
         }
-        return view('semi_aktif', compact('lokasis', 'lokasi_name'));
+
+        $image = join(',', $images);
+
+        return view('semi_aktif', compact('lokasis', 'lokasi_name', 'image'));
     }
 
     public function non_aktif()
     {
         $lokasis = Lokasi::where('kualitas_unsur', 'Tidak Digunakan')->get();
         $lokasi_name = [];
+        $images = [];
         foreach ($lokasis as $lokasi) {
-            array_push($lokasi_name, $lokasi['name']);
+            array_push($lokasi_name, $lokasi->name);
+            $ui = UnsurImage::where('lokasi_id', $lokasi->id)->first();
+            array_push($images, $ui->image);
         }
-        return view('non_aktif', compact('lokasis', 'lokasi_name'));
+
+        $image = join(',', $images);
+
+        return view('non_aktif', compact('lokasis', 'lokasi_name', 'image'));
     }
 
     public function lokasi()
@@ -83,7 +109,7 @@ class LokasiController extends Controller
                 'latitude' => 'required',
                 'longitude' => 'required',
                 'luasan' => 'required|numeric',
-                'image' => 'required|image',
+                'image' => 'required',
             ],
             [
                 'name.required' => 'Nama harus diisi',
@@ -92,7 +118,6 @@ class LokasiController extends Controller
                 'latitude.required' => 'Latitude harus diisi',
                 'longitude.required' => 'Longitude harus diisi',
                 'image.required' => 'Gambar harus diisi',
-                'image.image' => 'File yang diinput harus gambar',
             ]
         );
 
@@ -110,25 +135,66 @@ class LokasiController extends Controller
             'pemanfaatan_lain' => $request->pemanfaatan_lain,
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
-            'sertifikat' => $request->sertifikat != null ? $request->sertifikat->store('sertifikat-images') : '',
             'keterangan_tambahan' => $request->keterangan_tambahan,
-            'image' => $request->image != null ? $request->image->store('lokasi-images') : ''
         ]);
 
         Lokasi::create($data);
+
+        $lokasi_id = Lokasi::latest()->first();
+
+        $unsurImages = ([
+            'image' => $request->file('image')
+        ]);
+
+        if ($unsurImages['image']) {
+            foreach ($unsurImages['image'] as $item => $value) {
+                $unsurImage = ([
+                    'lokasi_id' => $lokasi_id->id,
+                    'image' => $unsurImages['image'][$item]->store('lokasi-images')
+                ]);
+                UnsurImage::create($unsurImage);
+            }
+        }
+
+        $sertifikatImages = ([
+            'image' => $request->file('sertifikat')
+        ]);
+
+        if ($sertifikatImages['image']) {
+            foreach ($sertifikatImages['image'] as $item => $value) {
+                $sertifikatImage = ([
+                    'lokasi_id' => $lokasi_id->id,
+                    'image' => $sertifikatImages['image'][$item]->store('sertifikat-images')
+                ]);
+                SertifikatImage::create($sertifikatImage);
+            }
+        }
+
         return redirect('/dashboard');
     }
 
     public function edit_lokasi(Request $request)
     {
-        if ($request->sertifikat != null) {
-            Storage::delete($request->sertifikat_old);
-        }
-        if ($request->image != null) {
-            Storage::delete($request->image_old);
-        }
+        $request->validate(
+            [
+                'name' => 'required',
+                'address' => 'required',
+                'desa' => 'required',
+                'latitude' => 'required',
+                'longitude' => 'required',
+                'luasan' => 'required|numeric',
+            ],
+            [
+                'name.required' => 'Nama harus diisi',
+                'address.required' => 'Alamat harus diisi',
+                'desa.required' => 'Desa harus diisi',
+                'latitude.required' => 'Latitude harus diisi',
+                'longitude.required' => 'Longitude harus diisi',
+            ]
+        );
 
-        Lokasi::where('id', $request->id)->update(array(
+        Lokasi::where('id', $request->lokasi_id)->update([
+            'category_id' => $request->category,
             'name' => $request->name,
             'nama_lain' => $request->nama_lain,
             'address' => $request->address,
@@ -141,23 +207,68 @@ class LokasiController extends Controller
             'pemanfaatan_lain' => $request->pemanfaatan_lain,
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
-            'sertifikat' => $request->sertifikat != null ? $request->sertifikat->store('sertifikat_images') : $request->sertifikat_old,
             'keterangan_tambahan' => $request->keterangan_tambahan,
-            'image' => $request->image != null ? $request->image->store('lokasi-images') : $request->image_old
-        ));
+        ]);
+
+        $unsurImages = ([
+            'image' => $request->image
+        ]);
+
+        if ($unsurImages['image']) {
+            $unsur_images = UnsurImage::where('lokasi_id', $request->lokasi_id)->get();
+            foreach ($unsur_images as $unsur_image) {
+                Storage::delete($unsur_image->image);
+            }
+            UnsurImage::where('lokasi_id', $request->lokasi_id)->delete();
+            foreach ($unsurImages['image'] as $item => $value) {
+                $unsurImage = ([
+                    'lokasi_id' => $request->lokasi_id,
+                    'image' => $unsurImages['image'][$item]->store('lokasi-images')
+                ]);
+                UnsurImage::create($unsurImage);
+            }
+        }
+
+        $sertifikatImages = ([
+            'image' => $request->sertifikat
+        ]);
+
+        if ($sertifikatImages['image']) {
+            $sertifikat_images = SertifikatImage::where('lokasi_id', $request->lokasi_id)->get();
+            foreach ($sertifikat_images as $sertifikat_image) {
+                Storage::delete($sertifikat_image->image);
+            }
+            SertifikatImage::where('lokasi_id', $request->lokasi_id)->delete();
+            foreach ($sertifikatImages['image'] as $item => $value) {
+                $sertifikatImage = ([
+                    'lokasi_id' => $request->lokasi_id,
+                    'image' => $sertifikatImages['image'][$item]->store('sertifikat-images')
+                ]);
+                SertifikatImage::create($sertifikatImage);
+            }
+        }
 
         return redirect('/detail');
     }
 
     public function delete($id)
     {
-        $lokasi = Lokasi::where('id', $id)->first();
-        if ($lokasi->image) {
-            Storage::delete($lokasi->image);
+        $unsurImages = UnsurImage::where('lokasi_id', $id)->get();
+        if ($unsurImages) {
+            foreach ($unsurImages as $unsurImage) {
+                Storage::delete($unsurImage->image);
+            }
         }
-        if ($lokasi->sertifikat) {
-            Storage::delete($lokasi->sertifikat);
+        UnsurImage::where('lokasi_id', $id)->delete();
+
+        $sertifikatImages = SertifikatImage::where('lokasi_id', $id)->get();
+        if ($sertifikatImages) {
+            foreach ($sertifikatImages as $sertifikatImage) {
+                Storage::delete($sertifikatImage->image);
+            }
         }
+        SertifikatImage::where('lokasi_id', $id)->delete();
+
         Lokasi::where('id', $id)->delete();
         return back();
     }
@@ -165,6 +276,8 @@ class LokasiController extends Controller
     public function detail_lokasi($id)
     {
         $lokasi = Lokasi::where('id', $id)->first();
-        return view('detail', compact('lokasi'));
+        $lokasi_images = UnsurImage::where('lokasi_id', $id)->get();
+        $sertifikat_images = SertifikatImage::where('lokasi_id', $id)->get();
+        return view('detail', compact('lokasi', 'lokasi_images', 'sertifikat_images'));
     }
 }

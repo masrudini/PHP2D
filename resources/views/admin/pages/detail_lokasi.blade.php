@@ -122,16 +122,86 @@
                                             </div>
                                             <div class="leaflet-container">
                                                 <div id="map"></div>
-                                                <div class="d-flex justify-content-between">
-                                                    @if ($lokasi->sertifikat)
-                                                        <img src="{{ url('storage') }}/{{ $lokasi->sertifikat }}"
-                                                            style="width:49%; height: 200px;" class="rounded mt-2"
-                                                            alt="">
-                                                    @endif
-                                                    <img src="{{ url('storage') }}/{{ $lokasi->image }}"
-                                                        style="width:49%; height: 200px;" class="rounded mt-2"
-                                                        alt="">
+                                                <div class="d-flex justify-content-center mt-2">
+                                                    <h4><b>Foto Unsur :</b></h4>
                                                 </div>
+                                                <div id="carouselExampleControls1" class="carousel slide"
+                                                    data-bs-ride="carousel">
+                                                    <div class="carousel-inner">
+                                                        @foreach ($lokasi_images as $lokasi_image)
+                                                            @if ($loop->first)
+                                                                <div class="carousel-item active">
+                                                                    <div class="d-flex justify-content-center">
+                                                                        <img src="{{ url('storage') }}/{{ $lokasi_image->image }}"
+                                                                            style="height: 200px; width:60%;"
+                                                                            class="d-block rounded mt-2" alt="">
+                                                                    </div>
+                                                                </div>
+                                                            @else
+                                                                <div class="carousel-item">
+                                                                    <div class="d-flex justify-content-center">
+                                                                        <img src="{{ url('storage') }}/{{ $lokasi_image->image }}"
+                                                                            style="height: 200px;"
+                                                                            class="d-block rounded mt-2" alt="">
+                                                                    </div>
+                                                                </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
+                                                    <button class="carousel-control-prev" type="button"
+                                                        data-bs-target="#carouselExampleControls1" data-bs-slide="prev">
+                                                        <span class="carousel-control-prev-icon"
+                                                            style="background-color: black"></span>
+                                                    </button>
+                                                    <button class="carousel-control-next" type="button"
+                                                        data-bs-target="#carouselExampleControls1" data-bs-slide="next">
+                                                        <span class="carousel-control-next-icon"
+                                                            style="background-color: black"></span>
+                                                    </button>
+                                                </div>
+                                                @if (count($sertifikat_images) != 0)
+                                                    <div class="d-flex justify-content-center mt-2">
+                                                        <h4><b>Bukti Kepemilikan/Sertifikat atas Hak Tanah :</b></h4>
+                                                    </div>
+                                                    <div id="carouselExampleControls2" class="carousel slide"
+                                                        data-bs-ride="carousel">
+                                                        <div class="carousel-inner">
+                                                            @foreach ($sertifikat_images as $sertifikat_image)
+                                                                @if ($loop->first)
+                                                                    <div class="carousel-item active">
+                                                                        <div class="d-flex justify-content-center">
+                                                                            <img src="{{ url('storage') }}/{{ $sertifikat_image->image }}"
+                                                                                style="height: 200px; width:60%;"
+                                                                                class="d-block rounded mt-2"
+                                                                                alt="">
+                                                                        </div>
+                                                                    </div>
+                                                                @else
+                                                                    <div class="carousel-item">
+                                                                        <div class="d-flex justify-content-center">
+                                                                            <img src="{{ url('storage') }}/{{ $sertifikat_image->image }}"
+                                                                                style="height: 200px;"
+                                                                                class="d-block rounded mt-2"
+                                                                                alt="">
+                                                                        </div>
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+                                                        <button class="carousel-control-prev" type="button"
+                                                            data-bs-target="#carouselExampleControls2"
+                                                            data-bs-slide="prev">
+                                                            <span class="carousel-control-prev-icon"
+                                                                style="background-color: black"></span>
+                                                        </button>
+                                                        <button class="carousel-control-next" type="button"
+                                                            data-bs-target="#carouselExampleControls2"
+                                                            data-bs-slide="next">
+                                                            <span class="carousel-control-next-icon"
+                                                                style="background-color: black"></span>
+                                                        </button>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -187,36 +257,111 @@
     // var userLat, userLng;
     var currentLat = "<?php echo $lokasi->latitude; ?>";
     var currentLng = "<?php echo $lokasi->longitude; ?>";
+    var category = "<?php echo $lokasi->category_id; ?>";
 
+    var icon_perkantoran = L.icon({
+        iconUrl: '/images/icon_perkantoran.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var icon_pendidikan = L.icon({
+        iconUrl: '/images/icon_pendidikan.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var icon_kesehatan = L.icon({
+        iconUrl: '/images/icon_kesehatan.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var icon_ibadah = L.icon({
+        iconUrl: '/images/icon_ibadah.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var icon_wisata = L.icon({
+        iconUrl: '/images/icon_wisata.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var icon_olahraga = L.icon({
+        iconUrl: '/images/icon_olahraga.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var icon_komunikasi = L.icon({
+        iconUrl: '/images/icon_komunikasi.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var icon_transmisi = L.icon({
+        iconUrl: '/images/icon_transmisi.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var icon_transportasi = L.icon({
+        iconUrl: '/images/icon_transportasi.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var icon_pabrik = L.icon({
+        iconUrl: '/images/icon_pabrik.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
+
+    var icon_lainnya = L.icon({
+        iconUrl: '/images/icon_lainnya.png',
+        iconSize: [26, 35],
+        shadowSize: [50, 64],
+        iconAnchor: [15, 36],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-3, -76]
+    });
 
     var map = L.map('map', {
         zoomControl: true
     }).setView([-0.05652732759345948, 109.17823055147235], 13);
     // Routing & current location
-
-    function showPosition(pos) {
-        userLat = pos.coords.latitude;
-        userLng = pos.coords.longitude;
-        console.log(userLat, userLng);
-    }
-
-    if (!navigator.geolocation) {
-        console.log("Location denied");
-    } else {
-        console.log("Halo");
-        navigator.geolocation.getCurrentPosition(showPosition);
-    }
-
-    function routeToLocation() {
-        L.Routing.control({
-            waypoints: [
-                L.latLng(userLat, userLng),
-                L.latLng(currentLat, currentLng)
-            ],
-        }).addTo(map);
-        map.panTo([userLat, userLng]);
-        map.flyTo([userLat, userLng], 15);
-    }
 
     var tiles = L.tileLayer(
         'http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
@@ -224,23 +369,22 @@
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
         }).addTo(map);
 
-    marker = L.marker([currentLat, currentLng]).addTo(map);
+    marker = L.marker([currentLat, currentLng], {
+        icon: category == 1 ?
+            icon_perkantoran : category == 2 ?
+            icon_pendidikan : category == 3 ?
+            icon_kesehatan : category == 4 ?
+            icon_ibadah : category == 5 ?
+            icon_wisata : category == 6 ?
+            icon_olahraga : category == 7 ?
+            icon_komunikasi : category == 8 ?
+            icon_transmisi : category == 9 ?
+            icon_transportasi : category == 10 ?
+            icon_pabrik : category == 11 ?
+            icon_lainnya : icon_lainnya
+    }).addTo(map);
     map.panTo([currentLat, currentLng]);
     map.flyTo([currentLat, currentLng], 18);
-
-    function onMapClick(e) {
-        var latitude = e.latlng['lat'];
-        var longitude = e.latlng['lng'];
-        document.getElementById('latitude').setAttribute('value', e.latlng['lat']);
-        document.getElementById('longitude').setAttribute('value', e.latlng['lng']);
-        map.removeLayer(marker);
-        marker = L.marker([latitude, longitude]).addTo(map);
-        map.panTo([latitude, longitude]);
-        map.flyTo([latitude, longitude], 17);
-    }
-    map.on('click', function(e) {
-        onMapClick(e);
-    });
 </script>
 
 </html>

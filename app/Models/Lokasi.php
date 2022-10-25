@@ -15,4 +15,14 @@ class Lokasi extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function unsurImage()
+    {
+        return $this->hasMany(UnsurImage::class);
+    }
+
+    public function sertifikatImage()
+    {
+        return $this->hasMany(SertifikatImage::class);
+    }
 }
