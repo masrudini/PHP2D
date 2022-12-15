@@ -207,6 +207,8 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
 <script src="{{ url('js/L.Control.MousePosition.js') }}"></script>
+<script src="{{ url('js/main.js') }}" type="text/javascript"></script>
+
 <script>
     var map = L.map('map', {
         zoomControl: true
@@ -361,12 +363,17 @@
             `<div id="legend-title"><h4>Legenda</h4><i id="legend-icon-down" onclick="showLegends()" class="ms-3 mdi mdi-chevron-down"></div>`;
         div.innerHTML +=
             `<div id="legend-items" class="legend-items active">
-                <img src="images/icon_masjid.png" width="18px" class="icon py-2"></i><span class="px-2">Masjid</span><br>
-                <img src="images/icon_gereja.png" width="18px" class="icon py-2"></i><span class="px-2">Gereja</span><br>
-                <img src="images/icon_sekolah.png" width="18px" class="icon py-2"></i><span class="px-2">Sekolah</span><br>
-                <img src="images/icon_administrasi.png" width="18px" class="icon py-2"></i><span class="px-2">Bangunan Administrasi</span><br>
-                <img src="images/icon_pabrik.png" width="18px" class="icon py-2"></i><span class="px-2">Pabrik</span><br>
-                <img src="images/icon_lainnya.png" width="18px" class="icon py-2"></i><span class="px-2">Lainnya</span><br>
+                <img src="images/ic_ibadah.png" width="18px" class="icon py-2"></i><span class="px-2">Masjid</span><br>
+                <img src="images/ic_kantor.png" width="18px" class="icon py-2"></i><span class="px-2">Gereja</span><br>
+                <img src="images/ic_kesehatan.png" width="18px" class="icon py-2"></i><span class="px-2">Sekolah</span><br>
+                <img src="images/ic_komunikasi.png" width="18px" class="icon py-2"></i><span class="px-2">Bangunan Administrasi</span><br>
+                <img src="images/ic_lain.png" width="18px" class="icon py-2"></i><span class="px-2">Pabrik</span><br>
+                <img src="images/ic_olahraga.png" width="18px" class="icon py-2"></i><span class="px-2">Lainnya</span><br>
+                <img src="images/ic_pabrik.png" width="18px" class="icon py-2"></i><span class="px-2">Lainnya</span><br>
+                <img src="images/ic_sekolah.png" width="18px" class="icon py-2"></i><span class="px-2">Lainnya</span><br>
+                <img src="images/ic_transmisi.png" width="18px" class="icon py-2"></i><span class="px-2">Lainnya</span><br>
+                <img src="images/ic_transportasi.png" width="18px" class="icon py-2"></i><span class="px-2">Lainnya</span><br>
+                <img src="images/ic_wisata.png" width="18px" class="icon py-2"></i><span class="px-2">Lainnya</span><br>
             </div>`;
         return div;
     };
@@ -384,65 +391,14 @@
         $.getJSON('lokasi-aktif/json', function(data) {
             $.each(data, function(index) {
 
-                var icon_lainnya = L.icon({
-                    iconUrl: 'images/icon_lainnya.png',
-                    iconSize: [26, 31],
-                    shadowSize: [50, 64],
-                    iconAnchor: [15, 36],
-                    shadowAnchor: [4, 62],
-                    popupAnchor: [-3, -76]
-                });
-
-                var icon_masjid = L.icon({
-                    iconUrl: 'images/icon_masjid.png',
-                    iconSize: [26, 31],
-                    shadowSize: [50, 64],
-                    iconAnchor: [15, 36],
-                    shadowAnchor: [4, 62],
-                    popupAnchor: [-3, -76]
-                });
-
-                var icon_gereja = L.icon({
-                    iconUrl: 'images/icon_gereja.png',
-                    iconSize: [26, 31],
-                    shadowSize: [50, 64],
-                    iconAnchor: [15, 36],
-                    shadowAnchor: [4, 62],
-                    popupAnchor: [-3, -76]
-                });
-                var icon_sekolah = L.icon({
-                    iconUrl: 'images/icon_sekolah.png',
-                    iconSize: [26, 31],
-                    shadowSize: [50, 64],
-                    iconAnchor: [15, 36],
-                    shadowAnchor: [4, 62],
-                    popupAnchor: [-3, -76]
-                });
-                var icon_pabrik = L.icon({
-                    iconUrl: 'images/icon_pabrik.png',
-                    iconSize: [26, 31],
-                    shadowSize: [50, 64],
-                    iconAnchor: [15, 36],
-                    shadowAnchor: [4, 62],
-                    popupAnchor: [-3, -76]
-                });
-
-                var icon_administrasi = L.icon({
-                    iconUrl: 'images/icon_administrasi.png',
-                    iconSize: [26, 31],
-                    shadowSize: [50, 64],
-                    iconAnchor: [15, 36],
-                    shadowAnchor: [4, 62],
-                    popupAnchor: [-3, -76]
-                });
-
-                // console.log(data[index].category_id)
                 marker = L.marker([data[index].latitude, data[index].longitude], {
-                    icon: data[index].category_id == 1 ? icon_masjid : data[index]
+                    icon: data[index].category_id == 1 ? ic_kantor : data[index]
                         .category_id == 2 ?
-                        icon_gereja : data[index].category_id == 3 ? icon_administrasi :
-                        data[index].category_id == 4 ? icon_sekolah : data[index] == 7 ?
-                        icon_pabrik : icon_lainnya
+                        ic_sekolah : data[index].category_id == 3 ? ic_kesehatan : data[
+                            index].category_id == 4 ? ic_ibadah : data[index] == 5 ?
+                        ic_wisata : data[index] == 6 ? ic_olahraga : data[index] == 7 ?
+                        ic_komunikasi : data[index] == 8 ? ic_transmisi : data[index] ==
+                        9 ? ic_transportasi : data[index] == 10 ? ic_pabrik : ic_lain
                 }).addTo(map).bindPopup();
 
 
