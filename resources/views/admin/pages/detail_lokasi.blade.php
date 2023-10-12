@@ -141,7 +141,7 @@
                                                                 <div class="carousel-item">
                                                                     <div class="d-flex justify-content-center">
                                                                         <img src="{{ url('storage') }}/{{ $lokasi_image->image }}"
-                                                                            style="height: 200px;"
+                                                                            style="height: 200px; width:60%;"
                                                                             class="d-block rounded mt-2" alt="">
                                                                     </div>
                                                                 </div>
@@ -180,7 +180,7 @@
                                                                     <div class="carousel-item">
                                                                         <div class="d-flex justify-content-center">
                                                                             <img src="{{ url('storage') }}/{{ $sertifikat_image->image }}"
-                                                                                style="height: 200px;"
+                                                                                style="height: 200px; width:60%;"
                                                                                 class="d-block rounded mt-2"
                                                                                 alt="">
                                                                         </div>

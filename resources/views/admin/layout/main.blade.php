@@ -14,15 +14,6 @@
     <!-- End layout styles -->
     <link rel="shortcut icon" href="{{ url('images/sungai_kakap.ico') }}" />
     <!-- Bootstrap CSS -->
-    <!-- Bootstrap DataTables CSS -->
-    <!-- Jquery -->
-    <script type="text/javascript" language="javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <!-- Jquery DataTables -->
-    <script type="text/javascript" language="javascript"
-        src="http:////cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
-    <!-- Bootstrap dataTables Javascript -->
-    <script type="text/javascript" language="javascript"
-        src="http://cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 </head>
 
 <body>

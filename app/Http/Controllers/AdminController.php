@@ -34,7 +34,7 @@ class AdminController extends Controller
 
     public function detail()
     {
-        $lokasis = Lokasi::paginate(10);
+        $lokasis = Lokasi::paginate(100);
         return view('admin/pages/detail', compact('lokasis'));
     }
 

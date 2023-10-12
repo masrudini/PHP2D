@@ -536,6 +536,23 @@
         });
     });
 
+    // batas desa
+    $.getJSON('sui_kkp.geojson', function(json) {
+        geoLayer = L.geoJson(json, {
+            style: function(feature, layer) {
+                return {
+                    fillOpacity: 0,
+                    weight: 5,
+                    opacity: 1,
+                    color: "brown"
+                };
+            },
+            onEachFeature: function(feature, layer) {
+                layer.addTo(map);
+            }
+        });
+    });
+
     function cari(latlng) {
         var coordinat = latlng.split(",");
         map.flyTo([coordinat[0], coordinat[1]], 16);

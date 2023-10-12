@@ -109,7 +109,8 @@ class LokasiController extends Controller
                 'latitude' => 'required',
                 'longitude' => 'required',
                 'luasan' => 'required|numeric',
-                'image' => 'required',
+                'image.*' => 'image',
+                'sertifikat.*' => 'image'
             ],
             [
                 'name.required' => 'Nama harus diisi',
@@ -117,7 +118,7 @@ class LokasiController extends Controller
                 'desa.required' => 'Desa harus diisi',
                 'latitude.required' => 'Latitude harus diisi',
                 'longitude.required' => 'Longitude harus diisi',
-                'image.required' => 'Gambar harus diisi',
+                'image.image' => 'File yang diupload harus gambar',
             ]
         );
 
@@ -154,6 +155,12 @@ class LokasiController extends Controller
                 ]);
                 UnsurImage::create($unsurImage);
             }
+        } else {
+            $unsurImage = ([
+                'lokasi_id' => $lokasi_id->id,
+                'image' => 'lokasi-images/gedung_default.jpg'
+            ]);
+            UnsurImage::create($unsurImage);
         }
 
         $sertifikatImages = ([
@@ -168,6 +175,12 @@ class LokasiController extends Controller
                 ]);
                 SertifikatImage::create($sertifikatImage);
             }
+        } else {
+            $sertifikatImage = ([
+                'lokasi_id' => $lokasi_id->id,
+                'image' => 'sertifikat-images/berkas_default.jpg'
+            ]);
+            SertifikatImage::create($sertifikatImage);
         }
 
         return redirect('/dashboard');
@@ -183,6 +196,8 @@ class LokasiController extends Controller
                 'latitude' => 'required',
                 'longitude' => 'required',
                 'luasan' => 'required|numeric',
+                'image.*' => 'image',
+                'sertifikat.*' => 'image'
             ],
             [
                 'name.required' => 'Nama harus diisi',
@@ -217,7 +232,9 @@ class LokasiController extends Controller
         if ($unsurImages['image']) {
             $unsur_images = UnsurImage::where('lokasi_id', $request->lokasi_id)->get();
             foreach ($unsur_images as $unsur_image) {
-                Storage::delete($unsur_image->image);
+                if ($unsur_image->image != 'lokasi-images/gedung_default.jpg') {
+                    Storage::delete($unsur_image->image);
+                }
             }
             UnsurImage::where('lokasi_id', $request->lokasi_id)->delete();
             foreach ($unsurImages['image'] as $item => $value) {
@@ -236,7 +253,9 @@ class LokasiController extends Controller
         if ($sertifikatImages['image']) {
             $sertifikat_images = SertifikatImage::where('lokasi_id', $request->lokasi_id)->get();
             foreach ($sertifikat_images as $sertifikat_image) {
-                Storage::delete($sertifikat_image->image);
+                if ($unsur_image->image != 'sertifikat-images/berkas_default.jpg') {
+                    Storage::delete($sertifikat_image->image);
+                }
             }
             SertifikatImage::where('lokasi_id', $request->lokasi_id)->delete();
             foreach ($sertifikatImages['image'] as $item => $value) {
@@ -256,7 +275,9 @@ class LokasiController extends Controller
         $unsurImages = UnsurImage::where('lokasi_id', $id)->get();
         if ($unsurImages) {
             foreach ($unsurImages as $unsurImage) {
-                Storage::delete($unsurImage->image);
+                if ($unsurImage->image != 'lokasi-images/gedung_default.jpg') {
+                    Storage::delete($unsurImage->image);
+                }
             }
         }
         UnsurImage::where('lokasi_id', $id)->delete();
@@ -264,7 +285,9 @@ class LokasiController extends Controller
         $sertifikatImages = SertifikatImage::where('lokasi_id', $id)->get();
         if ($sertifikatImages) {
             foreach ($sertifikatImages as $sertifikatImage) {
-                Storage::delete($sertifikatImage->image);
+                if ($sertifikatImage->image != 'sertifikat-images/berkas_default.jpg') {
+                    Storage::delete($sertifikatImage->image);
+                }
             }
         }
         SertifikatImage::where('lokasi_id', $id)->delete();

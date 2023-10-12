@@ -181,7 +181,7 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="/aktif" style="color: black;">Fasilitas Baik</a>
-                                <a class="dropdown-item" href="/semi-aktif" style="color: black;">Fasilitas Rusak -
+                                <a class="dropdown-item" href="/semi- aktif" style="color: black;">Fasilitas Rusak -
                                     Digunakan</a>
                                 <a class="dropdown-item" href="/non-aktif" style="color: black;">Fasilitas Tidak
                                     Digunakan</a>
@@ -534,6 +534,23 @@
                     ev.target.bindPopup(popupContent).openPopup();
                 });
             });
+        });
+    });
+
+    // batas desa
+    $.getJSON('sui_kkp.geojson', function(json) {
+        geoLayer = L.geoJson(json, {
+            style: function(feature, layer) {
+                return {
+                    fillOpacity: 0,
+                    weight: 5,
+                    opacity: 1,
+                    color: "brown"
+                };
+            },
+            onEachFeature: function(feature, layer) {
+                layer.addTo(map);
+            }
         });
     });
 
